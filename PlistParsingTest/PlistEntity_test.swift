@@ -14,12 +14,13 @@ import PlistParsing
 
 class PlistEntity_test: XCTestCase {
     
-    //MARK:- Entity Creation
+    //MARK:- Entity Creation & Accessing Values
     func test_givenStringInput_whenCreation_thenCanGetTheValueBack() {
         let sut = PlistEntity(string: "hello")
         XCTAssertEqual(sut.string!, "hello", "string is the provieded one")
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
     }
     
     func test_givenIntInput_whenCreation_thenCanGetTheValueBack() {
@@ -27,6 +28,7 @@ class PlistEntity_test: XCTestCase {
         XCTAssertEqual(sut.number as! Int, 1, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
     }
     
     func test_givenFloatInput_whenCreation_thenCanGetTheValueBack() {
@@ -34,6 +36,7 @@ class PlistEntity_test: XCTestCase {
         XCTAssertEqual(sut.number as! Float, 1.3, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
     }
     
     func test_givenBoolInput_whenCreation_thenCanGetTheValueBack() {
@@ -41,6 +44,7 @@ class PlistEntity_test: XCTestCase {
         XCTAssertEqual(sut.number as! Bool, true, "")
         XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
     }
     
     func test_givenDateInput_whenCreation_thenCanGetTheValueBack() {
@@ -51,5 +55,19 @@ class PlistEntity_test: XCTestCase {
         } else { XCTFail("Date is not nil") }
         XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
+        XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
     }
+    
+    func test_giventDataInput_whenCreation_thenCanGetTheValueBack() {
+        let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let sut = PlistEntity(data: data)
+        if let result = sut.data {
+            XCTAssertTrue(data.isEqualToData(result), "")
+        } else { XCTFail("Data is not nil") }
+        XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
+        XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
+    }
+    
+    
 }

@@ -11,14 +11,15 @@ import Swift
 
 public struct PlistEntity {
     
+    private let entityType : EntityType
     private enum EntityType {
         case String(Swift.String)
         case Number(NSNumber)
         case Date(NSDate)
+        case Data(NSData)
     }
     
-    private let entityType : EntityType
-    
+    //MARK:- Entity Creation
     public init(bool: Bool) {
         entityType = .Number(bool)
     }
@@ -39,10 +40,13 @@ public struct PlistEntity {
         entityType = .Date(date)
     }
     
+    public init(data: NSData) {
+        entityType = .Data(data)
+    }
     
 }
 
-//  Accessing Values
+//MARK:- Accessing Entity Values
 public extension PlistEntity {
     
     public var string : String? {
@@ -69,6 +73,16 @@ public extension PlistEntity {
         get {
             switch entityType {
             case let .Date(value):
+                return value
+            default:
+                return nil;
+            }
+        }
+    }
+    public var data : NSData? {
+        get {
+            switch entityType {
+            case let .Data(value):
                 return value
             default:
                 return nil;
