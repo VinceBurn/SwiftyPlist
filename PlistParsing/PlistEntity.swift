@@ -45,7 +45,7 @@ public struct PlistEntity {
 //  Accessing Values
 public extension PlistEntity {
     
-    var string : String? {
+    public var string : String? {
         get {
             switch entityType {
             case let .String(value):
@@ -55,7 +55,7 @@ public extension PlistEntity {
             }
         }
     }
-    var number : NSNumber? {
+    public var number : NSNumber? {
         get {
             switch entityType {
             case let .Number(value):
@@ -65,7 +65,7 @@ public extension PlistEntity {
             }
         }
     }
-    var date : NSDate? {
+    public var date : NSDate? {
         get {
             switch entityType {
             case let .Date(value):
