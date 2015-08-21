@@ -14,9 +14,14 @@ public struct PlistEntity {
     private enum EntityType {
         case String(Swift.String)
         case Number(NSNumber)
+        case Date(NSDate)
     }
     
     private let entityType : EntityType
+    
+    public init(bool: Bool) {
+        entityType = .Number(bool)
+    }
     
     public init(int: Int) {
         entityType = .Number(int)
@@ -28,6 +33,10 @@ public struct PlistEntity {
     
     public init(string: String) {
         entityType = .String(string)
+    }
+    
+    public init(date: NSDate) {
+        entityType = .Date(date)
     }
     
     
@@ -50,6 +59,16 @@ public extension PlistEntity {
         get {
             switch entityType {
             case let .Number(value):
+                return value
+            default:
+                return nil;
+            }
+        }
+    }
+    var date : NSDate? {
+        get {
+            switch entityType {
+            case let .Date(value):
                 return value
             default:
                 return nil;
