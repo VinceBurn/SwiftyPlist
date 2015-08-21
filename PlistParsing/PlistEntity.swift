@@ -7,23 +7,55 @@
 //
 
 import Foundation
+import Swift
 
 public struct PlistEntity {
     
+    private enum EntityType {
+        case String(Swift.String)
+        case Number(NSNumber)
+    }
+    
+    private let entityType : EntityType
+    
     public init(int: Int) {
-        self.string = nil;
-        self.number = int
+        entityType = .Number(int)
+    }
+    
+    public init(float: Float) {
+        entityType = .Number(float)
     }
     
     public init(string: String) {
-        self.string = string
-        self.number = nil;
+        entityType = .String(string)
     }
     
-    let number : NSNumber?
-    let string : String?
     
+}
+
+//  Accessing Values
+public extension PlistEntity {
     
+    var string : String? {
+        get {
+            switch entityType {
+            case let .String(value):
+                return value
+            default:
+                return nil;
+            }
+        }
+    }
+    var number : NSNumber? {
+        get {
+            switch entityType {
+            case let .Number(value):
+                return value
+            default:
+                return nil;
+            }
+        }
+    }
 }
 
 
