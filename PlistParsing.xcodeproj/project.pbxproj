@@ -8,7 +8,20 @@
 
 /* Begin PBXBuildFile section */
 		B40B02CF1B87C4F4007DEB0E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B02CE1B87C4F4007DEB0E /* main.swift */; };
+		B40B02DE1B87C520007DEB0E /* PlistEntity_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B02DD1B87C520007DEB0E /* PlistEntity_test.swift */; };
+		B40B02E31B87C582007DEB0E /* PlistEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B02E21B87C582007DEB0E /* PlistEntity.swift */; };
+		B40B02E71B87C7A8007DEB0E /* PlistEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B02E21B87C582007DEB0E /* PlistEntity.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B40B02E41B87C6C4007DEB0E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B40B02C31B87C4F4007DEB0E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B40B02CA1B87C4F4007DEB0E;
+			remoteInfo = PlistParsing;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		B40B02C91B87C4F4007DEB0E /* CopyFiles */ = {
@@ -25,10 +38,21 @@
 /* Begin PBXFileReference section */
 		B40B02CB1B87C4F4007DEB0E /* PlistParsing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = PlistParsing; sourceTree = BUILT_PRODUCTS_DIR; };
 		B40B02CE1B87C4F4007DEB0E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		B40B02D91B87C520007DEB0E /* PlistParsingTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlistParsingTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B40B02DC1B87C520007DEB0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B40B02DD1B87C520007DEB0E /* PlistEntity_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistEntity_test.swift; sourceTree = "<group>"; };
+		B40B02E21B87C582007DEB0E /* PlistEntity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlistEntity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B40B02C81B87C4F4007DEB0E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B40B02D61B87C520007DEB0E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -42,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				B40B02CD1B87C4F4007DEB0E /* PlistParsing */,
+				B40B02DA1B87C520007DEB0E /* PlistParsingTest */,
 				B40B02CC1B87C4F4007DEB0E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -50,6 +75,7 @@
 			isa = PBXGroup;
 			children = (
 				B40B02CB1B87C4F4007DEB0E /* PlistParsing */,
+				B40B02D91B87C520007DEB0E /* PlistParsingTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -58,8 +84,26 @@
 			isa = PBXGroup;
 			children = (
 				B40B02CE1B87C4F4007DEB0E /* main.swift */,
+				B40B02E21B87C582007DEB0E /* PlistEntity.swift */,
 			);
 			path = PlistParsing;
+			sourceTree = "<group>";
+		};
+		B40B02DA1B87C520007DEB0E /* PlistParsingTest */ = {
+			isa = PBXGroup;
+			children = (
+				B40B02DD1B87C520007DEB0E /* PlistEntity_test.swift */,
+				B40B02DB1B87C520007DEB0E /* Supporting Files */,
+			);
+			path = PlistParsingTest;
+			sourceTree = "<group>";
+		};
+		B40B02DB1B87C520007DEB0E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B40B02DC1B87C520007DEB0E /* Info.plist */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -82,6 +126,24 @@
 			productReference = B40B02CB1B87C4F4007DEB0E /* PlistParsing */;
 			productType = "com.apple.product-type.tool";
 		};
+		B40B02D81B87C520007DEB0E /* PlistParsingTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B40B02DF1B87C520007DEB0E /* Build configuration list for PBXNativeTarget "PlistParsingTest" */;
+			buildPhases = (
+				B40B02D51B87C520007DEB0E /* Sources */,
+				B40B02D61B87C520007DEB0E /* Frameworks */,
+				B40B02D71B87C520007DEB0E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B40B02E51B87C6C4007DEB0E /* PBXTargetDependency */,
+			);
+			name = PlistParsingTest;
+			productName = PlistParsingTest;
+			productReference = B40B02D91B87C520007DEB0E /* PlistParsingTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -92,6 +154,9 @@
 				ORGANIZATIONNAME = "Vincent Bernier";
 				TargetAttributes = {
 					B40B02CA1B87C4F4007DEB0E = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					B40B02D81B87C520007DEB0E = {
 						CreatedOnToolsVersion = 6.4;
 					};
 				};
@@ -109,20 +174,49 @@
 			projectRoot = "";
 			targets = (
 				B40B02CA1B87C4F4007DEB0E /* PlistParsing */,
+				B40B02D81B87C520007DEB0E /* PlistParsingTest */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B40B02D71B87C520007DEB0E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B40B02C71B87C4F4007DEB0E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B40B02E31B87C582007DEB0E /* PlistEntity.swift in Sources */,
 				B40B02CF1B87C4F4007DEB0E /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B40B02D51B87C520007DEB0E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B40B02DE1B87C520007DEB0E /* PlistEntity_test.swift in Sources */,
+				B40B02E71B87C7A8007DEB0E /* PlistEntity.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B40B02E51B87C6C4007DEB0E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B40B02CA1B87C4F4007DEB0E /* PlistParsing */;
+			targetProxy = B40B02E41B87C6C4007DEB0E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B40B02D01B87C4F4007DEB0E /* Debug */ = {
@@ -217,6 +311,38 @@
 			};
 			name = Release;
 		};
+		B40B02E01B87C520007DEB0E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = PlistParsingTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		B40B02E11B87C520007DEB0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = PlistParsingTest/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -234,6 +360,14 @@
 			buildConfigurations = (
 				B40B02D31B87C4F4007DEB0E /* Debug */,
 				B40B02D41B87C4F4007DEB0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		B40B02DF1B87C520007DEB0E /* Build configuration list for PBXNativeTarget "PlistParsingTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B40B02E01B87C520007DEB0E /* Debug */,
+				B40B02E11B87C520007DEB0E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
