@@ -12,7 +12,7 @@ import Swift
 
 public struct Plist {
     
-    private let entityType : EntityType
+    private var entityType : EntityType
     private enum EntityType {
         case String(Swift.String)
         case Number(NSNumber)
@@ -123,5 +123,18 @@ public extension Plist {
     }
 }
 
+//MARK:- Subsripting Array
+public extension Plist {
+    subscript(index: Int) -> Plist {
+        get {
+            return self.array![index]
+        }
+        set(newValue) {
+            var ar = self.array!
+            ar[index] = newValue
+            entityType = .Array(ar)
+        }
+    }
+}
 
 

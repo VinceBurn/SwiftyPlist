@@ -140,7 +140,27 @@ class Plist_test: XCTestCase {
         } else { XCTFail("") }
     }
     
+    //MARK:- Subscripting Array
+    func test_givenArrayPlist_whenReadSubsripting_thenRetreiveTheProperIndex() {
+        let ar = plistArrayFromStrings(["p0", "p1"])
+        let sut = Plist(array: ar)
+        if let result = sut[1].string {
+            XCTAssertEqual(result, "p1", "")
+        } else { XCTFail("") }
+    }
     
+    func test_givenArrayPlist_whenWriteSubscripting_thenSetTheProperIndex() {
+        let ar = plistArrayFromStrings(["p0", "p1"])
+        var sut = Plist(array: ar)
+        sut[0] = Plist(string:"NEW")
+        if let rAr = sut.array, let p = rAr[0].string {
+            XCTAssertEqual(p, "NEW", "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenArrayPlist_whenSubscriptingOutsideBound_thenAssertion() {
+        //  CAN't be tested right now
+    }
     
     
     
