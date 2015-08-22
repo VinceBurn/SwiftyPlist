@@ -15,13 +15,26 @@ import PlistParsing
 class Plist_test: XCTestCase {
     
     //MARK:- Convinience Helpers
-    func plistArrayFromStrings(strings: [String]) -> [Plist] {
+    func plistArrayFromStrings(strings: [String]) -> Plist {
         var ar : [Plist] = []
         for s in strings {
             let p = Plist(string: s)
             ar.append(p)
         }
-        return ar
+        
+        let p = Plist(array: ar)
+        return p
+    }
+    
+    func plistDicFromKeysValues(keysValues: [(String, String)]) -> Plist {
+        var dic : [String : Plist] = [:]
+        for (k, v) in keysValues {
+            let p = Plist(string: v)
+            dic[k] = p
+        }
+        
+        let p = Plist(dictionary: dic)
+        return p
     }
     
     //MARK:- Entity Creation & Accessing Values
@@ -105,8 +118,7 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenArrayOfArrayInput_whenCreation_thenCanGetTheValuesBack() {
-        let ar = plistArrayFromStrings(["p0", "p1"])
-        let sut = Plist(array: [Plist(array: ar)])
+        let sut = Plist(array: [plistArrayFromStrings(["p0", "p1"])])
         if let rAr = sut.array, let resultAr = rAr[0].array where resultAr.count == 2  {
             for var i = 0; i < resultAr.count; ++i {
                 let s = resultAr[i]
@@ -119,8 +131,7 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenEmptyDictionaryInput_whenCreation_thenCanGetTheValueBack() {
-        let dic : [String : Plist] = [:]
-        let sut = Plist(dictionary: dic)
+        let sut = plistDicFromKeysValues([])
         if let result = sut.dictionary {
             XCTAssertEqual(result.count, 0, "")
         } else { XCTFail("") }
@@ -132,26 +143,22 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenDictionaryInput_whenCreation_thenCanGetTheValueBack() {
-        let p = Plist(string: "p")
-        let dic = ["key" : p]
-        let sut = Plist(dictionary: dic)
+        let sut = plistDicFromKeysValues([("key", "p")])
         if let rDic = sut.dictionary, let value = rDic["key"]?.string {
             XCTAssertEqual(value, "p", "")
         } else { XCTFail("") }
     }
     
     //MARK:- Subscripting Array
-    func test_givenArrayPlist_whenReadSubsripting_thenRetreiveTheProperIndex() {
-        let ar = plistArrayFromStrings(["p0", "p1"])
-        let sut = Plist(array: ar)
+    func test_givenArrayPlist_whenReadSubscripting_thenRetreiveTheProperIndex() {
+        let sut = plistArrayFromStrings(["p0", "p1"])
         if let result = sut[1].string {
             XCTAssertEqual(result, "p1", "")
         } else { XCTFail("") }
     }
     
     func test_givenArrayPlist_whenWriteSubscripting_thenSetTheProperIndex() {
-        let ar = plistArrayFromStrings(["p0", "p1"])
-        var sut = Plist(array: ar)
+        var sut = plistArrayFromStrings(["p0", "p1"])
         sut[0] = Plist(string:"NEW")
         if let rAr = sut.array, let p = rAr[0].string {
             XCTAssertEqual(p, "NEW", "")
@@ -159,10 +166,46 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenArrayPlist_whenSubscriptingOutsideBound_thenAssertion() {
-        //  CAN't be tested right now
+        //  CAN't be tested right now, there is not Assert Throw in Swift 1.2
     }
     
+    //MARK:- Subscripting Dictionary
+    func test_givenDictionaryPlist_whenReadSubscriptKeyNotInDic_thenNil() {
+        let sut = plistDicFromKeysValues([])
+        let result = sut["oups"]
+        XCTAssertTrue(result == nil, "")
+    }
     
+    func test_givenDictionaryPlist_whenReadSubscripting_thenRetreiveTheProperValue() {
+        let sut = plistDicFromKeysValues([("key", "p")])
+        if let result = sut["key"]?.string {
+            XCTAssertEqual(result, "p", "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenDictionaryPlist_whenWriteSubscriptKeyNotInDic_thenInsertNewItem() {
+        var sut = plistDicFromKeysValues([])
+        let p = Plist(string: "new")
+        sut["k"] = p
+        if let pStr = sut.dictionary!["k"], result = pStr.string {
+            XCTAssertEqual(result, "new", "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenDictionaryPlist_whenWriteSubscriptKeyInDic_thenOverrideExistingKey() {
+        var sut = plistDicFromKeysValues([("key", "p")])
+        sut["key"] =  Plist(string: "NEW")
+        if let pStr = sut.dictionary!["key"], result = pStr.string {
+            XCTAssertEqual(result, "NEW", "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenDictionaryPlist_whenWriteSubscriptKeyInDicWithNil_thenRemoveExistingKey() {
+        var sut = plistDicFromKeysValues([("key", "p")])
+        sut["key"] = nil
+        let result = sut["key"]
+        XCTAssertTrue(result == nil, "")
+    }
     
     
     

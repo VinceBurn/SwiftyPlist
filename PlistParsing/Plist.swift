@@ -137,4 +137,18 @@ public extension Plist {
     }
 }
 
+//MARK:- Subsripting Dictionary
+public extension Plist {
+    subscript(key: String) -> Plist? {
+        get {
+            return self.dictionary![key]
+        }
+        set(newValue) {
+            var dic = self.dictionary!
+            dic[key] = newValue
+            entityType = .Dictionary(dic)
+        }
+    }
+}
+
 
