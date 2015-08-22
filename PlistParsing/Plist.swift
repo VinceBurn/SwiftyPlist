@@ -3,13 +3,14 @@
 //  PlistParsing
 //
 //  Created by Vincent Bernier on 21-08-2015.
-//  Copyright (c) 2015 Vincent Bernier. All rights reserved.
+//  Inspired by https://github.com/monyschuk/PropertyList
+//  Copyright (c) 2015 Vincent Bernier. Use it a you see fit. No guarantee of support.
 //
 
 import Foundation
 import Swift
 
-public struct PlistEntity {
+public struct Plist {
     
     private let entityType : EntityType
     private enum EntityType {
@@ -17,6 +18,7 @@ public struct PlistEntity {
         case Number(NSNumber)
         case Date(NSDate)
         case Data(NSData)
+        case Array([Plist])
     }
     
     //MARK:- Entity Creation
@@ -44,10 +46,14 @@ public struct PlistEntity {
         entityType = .Data(data)
     }
     
+    public init(array: [Plist]) {
+        entityType = .Array(array)
+    }
+    
 }
 
 //MARK:- Accessing Entity Values
-public extension PlistEntity {
+public extension Plist {
     
     public var string : String? {
         get {
@@ -83,6 +89,16 @@ public extension PlistEntity {
         get {
             switch entityType {
             case let .Data(value):
+                return value
+            default:
+                return nil;
+            }
+        }
+    }
+    public var array : [Plist]? {
+        get {
+            switch entityType {
+            case let .Array(value):
                 return value
             default:
                 return nil;
