@@ -75,9 +75,8 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
-}
+    }
     
-    //NOTE: Remaining Array and Dictionary
     func test_givenEmptyArrayInput_whenCreation_thenCanGetTheValueBack() {
         let ar : [Plist] = []
         let sut = Plist(array: ar)
@@ -90,5 +89,29 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.data == nil, "Only the provided input is given back")
     }
     
-    //  test with an array of stuff
+    func test_givenArrayInput_whenCreation_thenCanGetTheValuesBack() {
+        let p0 = Plist(string: "p0")
+        let p1 = Plist(string: "p1")
+        let ar = [p0, p1]
+        let sut = Plist(array: ar)
+        if let resultAr = sut.array where resultAr.count == 2  {
+            for var i = 0; i < resultAr.count; ++i {
+                let s = resultAr[i]
+                if let str = s.string {
+                    let controlStr = "p\(i)"
+                    XCTAssertEqual(str, controlStr, "")
+                } else { XCTFail("") }
+            }
+        } else { XCTFail("") }
+    }
+    
+    //NOTE: Remaining Array and Dictionary
+    
+    
+    
+    
+    
+    
+    
+    
 }
