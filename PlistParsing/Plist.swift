@@ -12,6 +12,56 @@ import Swift
 
 public struct Plist {
     
+    /** Create a Plist from a Raw values that are Plist Convertible or Plist.
+    @warning Will crash if not convertible
+    */
+    public init(plistObject: Any) {
+        switch plistObject {
+            
+        case let string as String:
+            self.init(string: string)
+            
+        case let float as Float:
+            self.init(float:float)
+            
+        case let double as Double:
+            self.init(float: Float(double))
+            
+        case let date as NSDate:
+            self.init(date: date)
+            
+        case let int as Int:
+            self.init(int: int)
+            
+        case let bool as Bool:
+            self.init(bool: bool)
+            
+        case let data as NSData:
+            self.init(data: data)
+            
+        case let plist as Plist:
+            self.init(plist: plist)
+           
+        case let array as NSArray:
+            var pAr : [Plist] = []
+            for any in array {
+                let p = Plist(plistObject: any)
+                pAr.append(p)
+            }
+            self.init(array: pAr)
+            
+        case let array as [Plist]:
+            println()
+            self.init(array: array)
+
+        default:
+            print("value \(plistObject) is not a valid property list type")
+            self.init(string: "")
+            assertionFailure("Use only property list complient class.")
+        }
+        
+    }
+    
     private var entityType : EntityType
     private enum EntityType {
         case String(Swift.String)
@@ -23,34 +73,30 @@ public struct Plist {
     }
     
     //MARK:- Entity Creation
-    public init(bool: Bool) {
+    private init(plist: Plist) {
+        entityType = plist.entityType
+    }
+    private init(bool: Bool) {
         entityType = .Number(bool)
     }
-    
-    public init(int: Int) {
+    private init(int: Int) {
         entityType = .Number(int)
     }
-    
-    public init(float: Float) {
+    private init(float: Float) {
         entityType = .Number(float)
     }
-    
-    public init(string: String) {
+    private init(string: String) {
         entityType = .String(string)
     }
-    
-    public init(date: NSDate) {
+    private init(date: NSDate) {
         entityType = .Date(date)
     }
-    
-    public init(data: NSData) {
+    private init(data: NSData) {
         entityType = .Data(data)
     }
-    
-    public init(array: [Plist]) {
+    private init(array: [Plist]) {
         entityType = .Array(array)
     }
-    
     public init(dictionary: [String : Plist]) {
         entityType = .Dictionary(dictionary)
     }
@@ -78,6 +124,8 @@ public struct Plist {
 //        /// `Self(rawValue: self.rawValue)!` is equivalent to `self`.
 //        var rawValue: RawValue { get }
 //    }
+//
+//  NOTE: after that make a single public init : init(plistValue: AnyObject) // but only accepct plist type
 //}
 
 //MARK:- Accessing Entity Values
