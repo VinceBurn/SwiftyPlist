@@ -15,6 +15,14 @@ import PlistParsing
 class Plist_test: XCTestCase {
     
     //MARK:- Convinience Helpers
+    func plistArrayFromStrings(strings: [String]) -> [Plist] {
+        var ar : [Plist] = []
+        for s in strings {
+            let p = Plist(string: s)
+            ar.append(p)
+        }
+        return ar
+    }
     
     //MARK:- Entity Creation & Accessing Values
     func test_givenStringInput_whenCreation_thenCanGetTheValueBack() {
@@ -24,6 +32,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
     func test_givenIntInput_whenCreation_thenCanGetTheValueBack() {
@@ -33,6 +42,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
     func test_givenFloatInput_whenCreation_thenCanGetTheValueBack() {
@@ -42,6 +52,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
     func test_givenBoolInput_whenCreation_thenCanGetTheValueBack() {
@@ -51,6 +62,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
     func test_givenDateInput_whenCreation_thenCanGetTheValueBack() {
@@ -63,6 +75,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
     func test_giventDataInput_whenCreation_thenCanGetTheValueBack() {
@@ -75,6 +88,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
     func test_givenEmptyArrayInput_whenCreation_thenCanGetTheValueBack() {
@@ -87,14 +101,13 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
-    func test_givenArrayInput_whenCreation_thenCanGetTheValuesBack() {
-        let p0 = Plist(string: "p0")
-        let p1 = Plist(string: "p1")
-        let ar = [p0, p1]
-        let sut = Plist(array: ar)
-        if let resultAr = sut.array where resultAr.count == 2  {
+    func test_givenArrayOfArrayInput_whenCreation_thenCanGetTheValuesBack() {
+        let ar = plistArrayFromStrings(["p0", "p1"])
+        let sut = Plist(array: [Plist(array: ar)])
+        if let rAr = sut.array, let resultAr = rAr[0].array where resultAr.count == 2  {
             for var i = 0; i < resultAr.count; ++i {
                 let s = resultAr[i]
                 if let str = s.string {
@@ -105,8 +118,27 @@ class Plist_test: XCTestCase {
         } else { XCTFail("") }
     }
     
-    //NOTE: Remaining Array and Dictionary
+    func test_givenEmptyDictionaryInput_whenCreation_thenCanGetTheValueBack() {
+        let dic : [String : Plist] = [:]
+        let sut = Plist(dictionary: dic)
+        if let result = sut.dictionary {
+            XCTAssertEqual(result.count, 0, "")
+        } else { XCTFail("") }
+        XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
+        XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.data == nil, "Only the provided input is given back")
+        XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
+    }
     
+    func test_givenDictionaryInput_whenCreation_thenCanGetTheValueBack() {
+        let p = Plist(string: "p")
+        let dic = ["key" : p]
+        let sut = Plist(dictionary: dic)
+        if let rDic = sut.dictionary, let value = rDic["key"]?.string {
+            XCTAssertEqual(value, "p", "")
+        } else { XCTFail("") }
+    }
     
     
     

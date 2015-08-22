@@ -19,6 +19,7 @@ public struct Plist {
         case Date(NSDate)
         case Data(NSData)
         case Array([Plist])
+        case Dictionary([Swift.String : Plist])
     }
     
     //MARK:- Entity Creation
@@ -50,6 +51,10 @@ public struct Plist {
         entityType = .Array(array)
     }
     
+    public init(dictionary: [String : Plist]) {
+        entityType = .Dictionary(dictionary)
+    }
+    
 }
 
 //MARK:- Accessing Entity Values
@@ -75,6 +80,7 @@ public extension Plist {
             }
         }
     }
+    //TODO: Add convinience to get Int, Float and Bool
     public var date : NSDate? {
         get {
             switch entityType {
@@ -99,6 +105,16 @@ public extension Plist {
         get {
             switch entityType {
             case let .Array(value):
+                return value
+            default:
+                return nil;
+            }
+        }
+    }
+    public var dictionary : [String : Plist]? {
+        get {
+            switch entityType {
+            case let .Dictionary(value):
                 return value
             default:
                 return nil;
