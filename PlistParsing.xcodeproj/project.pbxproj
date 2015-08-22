@@ -42,6 +42,7 @@
 		B40B02DC1B87C520007DEB0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B40B02DD1B87C520007DEB0E /* Plist_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plist_test.swift; sourceTree = "<group>"; };
 		B40B02E21B87C582007DEB0E /* Plist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plist.swift; sourceTree = "<group>"; };
+		B4B94BD51B88B1F9005C5CDB /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = _Experiment/MyPlayground.playground; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +66,7 @@
 		B40B02C21B87C4F4007DEB0E = {
 			isa = PBXGroup;
 			children = (
+				B4B94BD51B88B1F9005C5CDB /* MyPlayground.playground */,
 				B40B02CD1B87C4F4007DEB0E /* PlistParsing */,
 				B40B02DA1B87C520007DEB0E /* PlistParsingTest */,
 				B40B02CC1B87C4F4007DEB0E /* Products */,
@@ -362,6 +364,7 @@
 				B40B02D41B87C4F4007DEB0E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B40B02DF1B87C520007DEB0E /* Build configuration list for PBXNativeTarget "PlistParsingTest" */ = {
 			isa = XCConfigurationList;
@@ -370,6 +373,7 @@
 				B40B02E11B87C520007DEB0E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
