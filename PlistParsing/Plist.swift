@@ -12,6 +12,18 @@ import Swift
 
 public struct Plist {
     
+    private var entityType : EntityType
+    private enum EntityType {
+        case String(Swift.String)
+        case Number(NSNumber)
+        case Date(NSDate)
+        case Data(NSData)
+        case Array([Plist])
+        case Dictionary([Swift.String : Plist])
+    }
+    
+    //MARK:- Entity Creation
+    
     /** Create a Plist from a Raw values that are Plist Convertible or Plist.
     @warning Will crash if not convertible
     */
@@ -19,28 +31,28 @@ public struct Plist {
         switch plistObject {
             
         case let string as String:
-            self.init(string: string)
+            self.entityType = .String(string)
             
         case let float as Float:
-            self.init(float:float)
+            self.entityType = .Number(float)
             
         case let double as Double:
-            self.init(float: Float(double))
+            self.entityType = .Number(Float(double))
             
         case let date as NSDate:
-            self.init(date: date)
+            self.entityType = .Date(date)
             
         case let int as Int:
-            self.init(int: int)
+            self.entityType = .Number(int)
             
         case let bool as Bool:
-            self.init(bool: bool)
+            self.entityType = .Number(bool)
             
         case let data as NSData:
-            self.init(data: data)
+            self.entityType = .Data(data)
             
         case let plist as Plist:
-            self.init(plist: plist)
+            self.entityType = plist.entityType
            
         case let array as NSArray:
             var pAr : [Plist] = []
@@ -48,14 +60,13 @@ public struct Plist {
                 let p = Plist(plistObject: any)
                 pAr.append(p)
             }
-            self.init(array: pAr)
+            self.entityType = .Array(pAr)
             
         case let array as [Plist]:
-            println()
-            self.init(array: array)
+            self.entityType = .Array(array)
             
         case let dictionary as [String : Plist]:
-            self.init(dictionary: dictionary)
+            self.entityType = .Dictionary(dictionary)
             
         case let dictionary as NSDictionary:
             var dic : [String : Plist] = [:]
@@ -68,53 +79,13 @@ public struct Plist {
                 }
             }
             
-            self.init(dictionary: dic)
+            self.entityType = .Dictionary(dic)
             
         default:
             print("value \(plistObject) is not a valid property list type")
-            self.init(string: "")
+            self.entityType = .String("")
             assertionFailure("Use only property list complient class.")
         }
-        
-    }
-    
-    private var entityType : EntityType
-    private enum EntityType {
-        case String(Swift.String)
-        case Number(NSNumber)
-        case Date(NSDate)
-        case Data(NSData)
-        case Array([Plist])
-        case Dictionary([Swift.String : Plist])
-    }
-    
-    //MARK:- Entity Creation
-    private init(plist: Plist) {
-        entityType = plist.entityType
-    }
-    private init(bool: Bool) {
-        entityType = .Number(bool)
-    }
-    private init(int: Int) {
-        entityType = .Number(int)
-    }
-    private init(float: Float) {
-        entityType = .Number(float)
-    }
-    private init(string: String) {
-        entityType = .String(string)
-    }
-    private init(date: NSDate) {
-        entityType = .Date(date)
-    }
-    private init(data: NSData) {
-        entityType = .Data(data)
-    }
-    private init(array: [Plist]) {
-        entityType = .Array(array)
-    }
-    private init(dictionary: [String : Plist]) {
-        entityType = .Dictionary(dictionary)
     }
 }
 
