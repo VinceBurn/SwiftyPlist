@@ -20,3 +20,4 @@ plist["float"] = 1.1
 * Keep the out of bound crash of array access
 * Assume that the plist format is known by the calling code (e.g. what kind of number you are suppose to have for a given key)
 * Keep `Plist` a `struct` to have better control over mutability and have value semantic.
+* Version number match Swift version. e.g. Version 1.2.x are version written for Swift 1.2.
