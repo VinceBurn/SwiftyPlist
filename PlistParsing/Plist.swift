@@ -129,6 +129,12 @@ extension Plist : RawRepresentable {
         }
     }
     
+    /** Convenience method to unwrap the result of init?(rawValue:)
+    @warning Method will crash if an error occure */
+    public static func newWithRawValue(rawValue: Any) -> Plist {
+        return Plist(rawValue: rawValue)!
+    }
+    
     public var rawValue: Any {
         get {
             return ""

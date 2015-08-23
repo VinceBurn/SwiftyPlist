@@ -262,53 +262,68 @@ class Plist_test: XCTestCase {
     func rawCreation(any: Any) -> Plist {
         return Plist(rawValue: any)!
     }
+    func newRawCreation(any: Any) -> Plist {
+        return Plist.newWithRawValue(any)
+    }
     
     func test_givenStringInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenStringInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenStringInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenIntInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenIntInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenIntInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenFloatInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenDoubleInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenBoolInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenDateInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenDateInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenDateInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenDataInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenDataInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenDataInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenEmptyNotCastedArrayInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenNotCastedArrayInput_whenRawCreation_thenCanGetTheValuesBack() {
         assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(rawCreation)
+        assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(newRawCreation)
     }
     
     func test_givenEmptyNSDictionaryInput_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     func test_givenNSDictionaryInput_whenRawCreation_thenCeanGetTheValueBack() {
         assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(rawCreation)
+        assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(newRawCreation)
     }
     
     func test_givenDictionaryStringInt_whenRawCreation_thenCanGetTheValueBack() {
         assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(rawCreation)
+        assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(newRawCreation)
     }
     
     //MARK: Failed [init]
