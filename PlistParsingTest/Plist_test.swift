@@ -196,6 +196,18 @@ class Plist_test: XCTestCase {
         } else { XCTFail("") }
     }
     
+    func test_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack() {
+        let inputDic = [ "val0" : 0, "val1" : 1]
+        let sut = Plist(plistObject: inputDic)
+        if let dic = sut.dictionary, num0 = dic["val0"]?.number as? Int, num1 = dic["val1"]?.number as? Int {
+            XCTAssertEqual(dic.count, 2, "")
+            XCTAssertEqual(num0, 0, "")
+            XCTAssertEqual(num1, 1, "")
+        } else { XCTFail("") }
+    }
+    
+    //MARK:- 
+    
     //MARK:- Subscripting Array
     func test_givenArrayPlist_whenReadSubscripting_thenRetreiveTheProperIndex() {
         let sut = plistArrayFromStrings(["p0", "p1"])
@@ -254,6 +266,15 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(result == nil, "")
     }
     
+    //MARK:- Subscripting Chaining
+    func test_givenDicArrayDicPlist_whenWriteOnExistingSubscript_theValueIsUpdated() {
+        let raw = [ "ar" : [["key" : "value"]] ]
+        var sut = Plist(plistObject: raw)
+        sut["ar"]?[0]["key"] = Plist(plistObject: "NEW")
+        if let val = sut["ar"]?[0]["key"]?.string {
+            XCTAssertEqual(val, "NEW", "")
+        } else { XCTFail("") }
+    }
     
     
 }
