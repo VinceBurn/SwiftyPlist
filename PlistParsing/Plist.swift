@@ -33,20 +33,11 @@ public struct Plist {
         case let string as String:
             self.entityType = .String(string)
             
-        case let float as Float:
-            self.entityType = .Number(float)
-            
-        case let double as Double:
-            self.entityType = .Number(Float(double))
+        case let num as NSNumber:
+            self.entityType = .Number(num)
             
         case let date as NSDate:
             self.entityType = .Date(date)
-            
-        case let int as Int:
-            self.entityType = .Number(int)
-            
-        case let bool as Bool:
-            self.entityType = .Number(bool)
             
         case let data as NSData:
             self.entityType = .Data(data)
