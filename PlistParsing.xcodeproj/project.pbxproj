@@ -46,7 +46,7 @@
 		B40B02E21B87C582007DEB0E /* Plist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plist.swift; sourceTree = "<group>"; };
 		B45BD3FB1B894AEB0023DF9C /* Plist_initegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plist_initegrationTest.swift; sourceTree = "<group>"; };
 		B45BD3FD1B894BCF0023DF9C /* PListRootDic.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PListRootDic.plist; sourceTree = "<group>"; };
-		B45BD4001B8A19730023DF9C /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		B45BD4001B8A19730023DF9C /* ArrayAndSwitch.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ArrayAndSwitch.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +117,7 @@
 		B45BD3FF1B8A19730023DF9C /* _Experiment */ = {
 			isa = PBXGroup;
 			children = (
-				B45BD4001B8A19730023DF9C /* MyPlayground.playground */,
+				B45BD4001B8A19730023DF9C /* ArrayAndSwitch.playground */,
 			);
 			path = _Experiment;
 			sourceTree = "<group>";
