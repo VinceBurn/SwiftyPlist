@@ -25,6 +25,7 @@ public struct Plist {
     //MARK:- Entity Creation
     
     /** Create a Plist from a Raw values that are Plist Convertible or Plist.
+    @discussion Accepted input are Plist compatible class and Plist struct
     @warning Will crash if not convertible
     */
     public init(plistObject: Any) {
@@ -69,7 +70,6 @@ public struct Plist {
                     assertionFailure("Key of dictionary must be String")
                 }
             }
-            
             self.entityType = .Dictionary(dic)
             
         default:
@@ -80,31 +80,69 @@ public struct Plist {
     }
 }
 
-////  RawRepresentable protocol
-//public extension Plist : RawRepresentable {
-//    /// A type that can be converted to an associated "raw" type, then
-//    /// converted back to produce an instance equivalent to the original.
-//    protocol RawRepresentable {
-//        
-//        /// The "raw" type that can be used to represent all values of `Self`.
-//        ///
-//        /// Every distinct value of `self` has a corresponding unique
-//        /// value of `RawValue`, but `RawValue` may have representations
-//        /// that do not correspond to an value of `Self`.
-//        typealias RawValue
-//        
-//        /// Convert from a value of `RawValue`, yielding `nil` iff
-//        /// `rawValue` does not correspond to a value of `Self`.
-//        init?(rawValue: RawValue)
-//        
-//        /// The corresponding value of the "raw" type.
-//        ///
-//        /// `Self(rawValue: self.rawValue)!` is equivalent to `self`.
-//        var rawValue: RawValue { get }
-//    }
-//
-//  NOTE: after that make a single public init : init(plistValue: AnyObject) // but only accepct plist type
-//}
+//MARK:-  RawRepresentable protocol
+extension Plist : RawRepresentable {
+    
+    /** Designited Creation Method
+    @discussion Accepted input are only Property list compatible class. Keys in dictionary must be Strings.
+    */
+    public init?(rawValue: Any) {
+        switch rawValue {
+            
+        case let string as String:
+            self.entityType = .String(string)
+            
+        case let num as NSNumber:
+            self.entityType = .Number(num)
+            
+        case let date as NSDate:
+            self.entityType = .Date(date)
+            
+        case let data as NSData:
+            self.entityType = .Data(data)
+            
+        case let plist as Plist:
+            self.entityType = plist.entityType
+            
+        case let array as NSArray:
+            var pAr : [Plist] = []
+            for any in array {
+                if let p = Plist(rawValue: any) {
+                    pAr.append(p)
+                } else {
+                    return nil
+                }
+            }
+            self.entityType = .Array(pAr)
+            
+        case let array as [Plist]:
+            self.entityType = .Array(array)
+            
+        case let dictionary as [String : Plist]:
+            self.entityType = .Dictionary(dictionary)
+            
+        case let dictionary as NSDictionary:
+            var dic : [String : Plist] = [:]
+            for (k, value) in dictionary {
+                if let key = k as? String, p = Plist(rawValue: value) {
+                    dic[key] = p
+                } else {
+                    return nil
+                }
+            }
+            self.entityType = .Dictionary(dic)
+            
+        default:
+            return nil
+        }
+    }
+    
+    public var rawValue: Any {
+        get {
+            return ""
+        }
+    }
+}
 
 //MARK:- Accessing Entity Values
 public extension Plist {
@@ -200,4 +238,6 @@ public extension Plist {
     }
 }
 
+//MARK:- Equatable
+//todo
 
