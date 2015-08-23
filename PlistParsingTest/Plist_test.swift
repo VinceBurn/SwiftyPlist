@@ -38,7 +38,7 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- Entity Creation Asserts
-    func assert_givenStringInput_whenCreation_thenCanGetTheValueBack(creation: (String) -> Plist) {
+    func assert_givenStringInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let sut = creation("hello")
         XCTAssertEqual(sut.string!, "hello", "string is the provieded one")
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
@@ -47,7 +47,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenIntInput_whenCreation_thenCanGetTheValueBack(creation: (Int) -> Plist) {
+    func assert_givenIntInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let sut = creation(1)
         XCTAssertEqual(sut.number as! Int, 1, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
@@ -56,7 +56,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(creation: (Float) -> Plist) {
+    func assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let sut = creation(Float(1.3))
         XCTAssertEqual(sut.number as! Float, 1.3, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
@@ -65,7 +65,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(creation: (Double) -> Plist) {
+    func assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let sut = creation(Double(1.3))
         XCTAssertEqual(sut.number as! Float, 1.3, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
@@ -74,7 +74,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(creation: (Bool) -> Plist) {
+    func assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let sut = creation(true)
         XCTAssertEqual(sut.number as! Bool, true, "")
         XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
@@ -83,7 +83,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenDateInput_whenCreation_thenCanGetTheValueBack(creation: (NSDate) -> Plist) {
+    func assert_givenDateInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let date = NSDate()
         let sut = creation(date)
         if let result = sut.date {
@@ -95,7 +95,7 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenDataInput_whenCreation_thenCanGetTheValueBack(creation: (NSData) -> Plist) {
+    func assert_givenDataInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
         let sut = creation(data)
         if let result = sut.data {
@@ -107,13 +107,13 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(creation: (NSArray) -> Plist) {
+    func assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let sut = creation([])
         if let result = sut.array {
             XCTAssertEqual(result.count, 0, "")
         } else { XCTFail("") }
     }
-    func assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(creation: (NSArray) -> Plist) {
+    func assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(creation: (Any) -> Plist) {
         let ar = ["bob", 1, true]
         let sut = creation(ar)
         if let result = sut.array, p0 = result[0].string, p1 = result[1].number as? Int, p2 = result[2].number as? Bool {
@@ -123,14 +123,14 @@ class Plist_test: XCTestCase {
             XCTAssertEqual(p2, true, "")
         } else { XCTFail("") }
     }
-    func assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(creation: (NSDictionary) -> Plist) {
+    func assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let dic = NSDictionary()
         let sut = creation(dic)
         if let result = sut.dictionary {
             XCTAssertEqual(result.count, 0, "")
         } else { XCTFail("") }
     }
-    func assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(creation: (NSDictionary) -> Plist) {
+    func assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(creation: (Any) -> Plist) {
         let date = NSDate()
         let dic = NSDictionary(objectsAndKeys: "p", "str", 1, "int", date, "date")
         let sut = creation(dic)
@@ -141,7 +141,7 @@ class Plist_test: XCTestCase {
             XCTAssertTrue(pd.isEqualToDate(date), "")
         } else { XCTFail("") }
     }
-    func assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(creation: (NSDictionary) -> Plist) {
+    func assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
         let inputDic = [ "val0" : 0, "val1" : 1]
         let sut = creation(inputDic)
         if let dic = sut.dictionary, num0 = dic["val0"]?.number as? Int, num1 = dic["val1"]?.number as? Int {
@@ -152,52 +152,56 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- Entity Creation & Accessing Values
+    func creation(any: Any) -> Plist {
+        return Plist(plistObject: any)
+    }
+    
     func test_givenStringInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenStringInput_whenCreation_thenCanGetTheValueBack { (s: String) -> Plist in return Plist(plistObject: s) }
+        assert_givenStringInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenIntInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenIntInput_whenCreation_thenCanGetTheValueBack { (i: Int) -> Plist in return Plist(plistObject: i) }
+        assert_givenIntInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenFloatInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenFloatInput_whenCreation_thenCanGetTheValueBack { (f: Float) -> Plist in Plist(plistObject: f) }
+        assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenDoubleInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack { (d: Double) -> Plist in Plist(plistObject: d) }
+        assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenBoolInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenBoolInput_whenCreation_thenCanGetTheValueBack { (b: Bool) -> Plist in Plist(plistObject: b) }
+        assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenDateInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenDateInput_whenCreation_thenCanGetTheValueBack { (d: NSDate) -> Plist in Plist(plistObject: d) }
+        assert_givenDateInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenDataInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenDataInput_whenCreation_thenCanGetTheValueBack { (d: NSData) -> Plist in Plist(plistObject: d) }
+        assert_givenDataInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack { (a: NSArray) -> Plist in Plist(plistObject: a) }
+        assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack() {
-        assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack { (a : NSArray) -> Plist in Plist(plistObject: a) }
+        assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(creation)
     }
     
     func test_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack() {
-        assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack { (d : NSDictionary) -> Plist in Plist(plistObject: d) }
+        assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     func test_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack() {
-        assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack { (d : NSDictionary) -> Plist in Plist(plistObject: d) }
+        assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(creation)
     }
     
     func test_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack() {
-        assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack { (d : NSDictionary) -> Plist in Plist(plistObject: d) }
+        assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(creation)
     }
     
     //MARK: Plist passed in the input somewhere
@@ -255,52 +259,56 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- RawRepresentable [init]
+    func rawCreation(any: Any) -> Plist {
+        return Plist(rawValue: any)!
+    }
+    
     func test_givenStringInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenStringInput_whenCreation_thenCanGetTheValueBack { (s: String) -> Plist in return Plist(rawValue: s)! }
+        assert_givenStringInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenIntInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenIntInput_whenCreation_thenCanGetTheValueBack { (i: Int) -> Plist in return Plist(rawValue: i)! }
+        assert_givenIntInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenFloatInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenFloatInput_whenCreation_thenCanGetTheValueBack { (f: Float) -> Plist in Plist(rawValue: f)! }
+        assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenDoubleInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack { (d: Double) -> Plist in Plist(rawValue: d)! }
+        assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenBoolInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenBoolInput_whenCreation_thenCanGetTheValueBack { (b: Bool) -> Plist in Plist(rawValue: b)! }
+        assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenDateInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenDateInput_whenCreation_thenCanGetTheValueBack { (d: NSDate) -> Plist in Plist(rawValue: d)! }
+        assert_givenDateInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenDataInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenDataInput_whenCreation_thenCanGetTheValueBack { (d: NSData) -> Plist in Plist(rawValue: d)! }
+        assert_givenDataInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenEmptyNotCastedArrayInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack { (a: NSArray) -> Plist in Plist(rawValue: a)! }
+        assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenNotCastedArrayInput_whenRawCreation_thenCanGetTheValuesBack() {
-        assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack { (a : NSArray) -> Plist in Plist(rawValue: a)! }
+        assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(rawCreation)
     }
     
     func test_givenEmptyNSDictionaryInput_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack { (d : NSDictionary) -> Plist in Plist(rawValue: d)! }
+        assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     func test_givenNSDictionaryInput_whenRawCreation_thenCeanGetTheValueBack() {
-        assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack { (d : NSDictionary) -> Plist in Plist(rawValue: d)! }
+        assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(rawCreation)
     }
     
     func test_givenDictionaryStringInt_whenRawCreation_thenCanGetTheValueBack() {
-        assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack { (d : NSDictionary) -> Plist in Plist(rawValue: d)! }
+        assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(rawCreation)
     }
     
     //MARK: Failed [init]
