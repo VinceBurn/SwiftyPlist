@@ -23,36 +23,69 @@ public struct Plist {
     }
     
     //MARK:- Entity Creation
-    public init(bool: Bool) {
-        entityType = .Number(bool)
-    }
     
-    public init(int: Int) {
-        entityType = .Number(int)
-    }
-    
-    public init(float: Float) {
-        entityType = .Number(float)
-    }
-    
-    public init(string: String) {
-        entityType = .String(string)
-    }
-    
-    public init(date: NSDate) {
-        entityType = .Date(date)
-    }
-    
-    public init(data: NSData) {
-        entityType = .Data(data)
-    }
-    
-    public init(array: [Plist]) {
-        entityType = .Array(array)
-    }
-    
-    public init(dictionary: [String : Plist]) {
-        entityType = .Dictionary(dictionary)
+    /** Create a Plist from a Raw values that are Plist Convertible or Plist.
+    @warning Will crash if not convertible
+    */
+    public init(plistObject: Any) {
+        switch plistObject {
+            
+        case let string as String:
+            self.entityType = .String(string)
+            
+        case let float as Float:
+            self.entityType = .Number(float)
+            
+        case let double as Double:
+            self.entityType = .Number(Float(double))
+            
+        case let date as NSDate:
+            self.entityType = .Date(date)
+            
+        case let int as Int:
+            self.entityType = .Number(int)
+            
+        case let bool as Bool:
+            self.entityType = .Number(bool)
+            
+        case let data as NSData:
+            self.entityType = .Data(data)
+            
+        case let plist as Plist:
+            self.entityType = plist.entityType
+           
+        case let array as NSArray:
+            var pAr : [Plist] = []
+            for any in array {
+                let p = Plist(plistObject: any)
+                pAr.append(p)
+            }
+            self.entityType = .Array(pAr)
+            
+        case let array as [Plist]:
+            self.entityType = .Array(array)
+            
+        case let dictionary as [String : Plist]:
+            self.entityType = .Dictionary(dictionary)
+            
+        case let dictionary as NSDictionary:
+            var dic : [String : Plist] = [:]
+            for (k, value) in dictionary {
+                if let key = k as? String {
+                    let p = Plist(plistObject: value)
+                    dic[key] = p
+                } else {
+                    assertionFailure("Key of dictionary must be String")
+                }
+            }
+            
+            self.entityType = .Dictionary(dic)
+            
+        default:
+            print("value \(plistObject) is not a valid property list type")
+            self.entityType = .String("")
+            assertionFailure("Use only property list complient class.")
+        }
     }
 }
 
@@ -78,6 +111,8 @@ public struct Plist {
 //        /// `Self(rawValue: self.rawValue)!` is equivalent to `self`.
 //        var rawValue: RawValue { get }
 //    }
+//
+//  NOTE: after that make a single public init : init(plistValue: AnyObject) // but only accepct plist type
 //}
 
 //MARK:- Accessing Entity Values

@@ -18,28 +18,28 @@ class Plist_test: XCTestCase {
     func plistArrayFromStrings(strings: [String]) -> Plist {
         var ar : [Plist] = []
         for s in strings {
-            let p = Plist(string: s)
+            let p = Plist(plistObject: s)
             ar.append(p)
         }
         
-        let p = Plist(array: ar)
+        let p = Plist(plistObject: ar)
         return p
     }
     
     func plistDicFromKeysValues(keysValues: [(String, String)]) -> Plist {
         var dic : [String : Plist] = [:]
         for (k, v) in keysValues {
-            let p = Plist(string: v)
+            let p = Plist(plistObject: v)
             dic[k] = p
         }
         
-        let p = Plist(dictionary: dic)
+        let p = Plist(plistObject: dic)
         return p
     }
     
     //MARK:- Entity Creation & Accessing Values
     func test_givenStringInput_whenCreation_thenCanGetTheValueBack() {
-        let sut = Plist(string: "hello")
+        let sut = Plist(plistObject: "hello")
         XCTAssertEqual(sut.string!, "hello", "string is the provieded one")
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
@@ -49,7 +49,7 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenIntInput_whenCreation_thenCanGetTheValueBack() {
-        let sut = Plist(int: 1)
+        let sut = Plist(plistObject: 1)
         XCTAssertEqual(sut.number as! Int, 1, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
@@ -59,7 +59,7 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenFloatInput_whenCreation_thenCanGetTheValueBack() {
-        let sut = Plist(float: 1.3)
+        let sut = Plist(plistObject: 1.3)
         XCTAssertEqual(sut.number as! Float, 1.3, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
@@ -69,7 +69,7 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenBoolInput_whenCreation_thenCanGetTheValueBack() {
-        let sut = Plist(bool: true)
+        let sut = Plist(plistObject: true)
         XCTAssertEqual(sut.number as! Bool, true, "")
         XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
@@ -80,7 +80,7 @@ class Plist_test: XCTestCase {
     
     func test_givenDateInput_whenCreation_thenCanGetTheValueBack() {
         let date = NSDate()
-        let sut = Plist(date: date)
+        let sut = Plist(plistObject: date)
         if let result = sut.date {
             XCTAssertTrue(date.isEqualToDate(result), "")
         } else { XCTFail("Date is not nil") }
@@ -93,7 +93,7 @@ class Plist_test: XCTestCase {
     
     func test_giventDataInput_whenCreation_thenCanGetTheValueBack() {
         let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
-        let sut = Plist(data: data)
+        let sut = Plist(plistObject: data)
         if let result = sut.data {
             XCTAssertTrue(data.isEqualToData(result), "")
         } else { XCTFail("Data is not nil") }
@@ -106,7 +106,7 @@ class Plist_test: XCTestCase {
     
     func test_givenEmptyArrayInput_whenCreation_thenCanGetTheValueBack() {
         let ar : [Plist] = []
-        let sut = Plist(array: ar)
+        let sut = Plist(plistObject: ar)
         if let result = sut.array {
             XCTAssertEqual(result.count, ar.count, "")
         } else { XCTFail("Array is not nil") }
@@ -117,8 +117,16 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     
+    func test_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack() {
+        let ar = []
+        let sut = Plist(plistObject: ar)
+        if let result = sut.array {
+            XCTAssertEqual(result.count, 0, "")
+        } else { XCTFail("") }
+    }
+    
     func test_givenArrayOfArrayInput_whenCreation_thenCanGetTheValuesBack() {
-        let sut = Plist(array: [plistArrayFromStrings(["p0", "p1"])])
+        let sut = Plist(plistObject: [plistArrayFromStrings(["p0", "p1"])])
         if let rAr = sut.array, let resultAr = rAr[0].array where resultAr.count == 2  {
             for var i = 0; i < resultAr.count; ++i {
                 let s = resultAr[i]
@@ -127,6 +135,17 @@ class Plist_test: XCTestCase {
                     XCTAssertEqual(str, controlStr, "")
                 } else { XCTFail("") }
             }
+        } else { XCTFail("") }
+    }
+    
+    func test_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack() {
+        let ar = ["bob", 1, true]
+        let sut = Plist(plistObject: ar)
+        if let result = sut.array, p0 = result[0].string, p1 = result[1].number as? Int, p2 = result[2].number as? Bool {
+            XCTAssertEqual(result.count, 3, "")
+            XCTAssertEqual(p0, "bob", "")
+            XCTAssertEqual(p1, 1, "")
+            XCTAssertEqual(p2, true, "")
         } else { XCTFail("") }
     }
     
@@ -149,6 +168,34 @@ class Plist_test: XCTestCase {
         } else { XCTFail("") }
     }
     
+    func test_givenPlistInput_whenCreation_thenGetSamePlistValueBack() {
+        let p = Plist(plistObject: "p")
+        let sut = Plist(plistObject: p)
+        if let result = sut.string {
+            XCTAssertEqual(result, "p", "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack() {
+        let dic = NSDictionary()
+        let sut = Plist(plistObject: dic)
+        if let result = sut.dictionary {
+            XCTAssertEqual(result.count, 0, "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack() {
+        let date = NSDate()
+        let dic = NSDictionary(objectsAndKeys: "p", "str", 1, "int", date, "date")
+        let sut = Plist(plistObject: dic)
+        if let r = sut.dictionary, ps = r["str"]?.string, pi = r["int"]?.number as? Int, pd = r["date"]?.date {
+            XCTAssertEqual(r.count, 3, "")
+            XCTAssertEqual(ps, "p", "")
+            XCTAssertEqual(pi, 1, "")
+            XCTAssertTrue(pd.isEqualToDate(date), "")
+        } else { XCTFail("") }
+    }
+    
     //MARK:- Subscripting Array
     func test_givenArrayPlist_whenReadSubscripting_thenRetreiveTheProperIndex() {
         let sut = plistArrayFromStrings(["p0", "p1"])
@@ -159,7 +206,7 @@ class Plist_test: XCTestCase {
     
     func test_givenArrayPlist_whenWriteSubscripting_thenSetTheProperIndex() {
         var sut = plistArrayFromStrings(["p0", "p1"])
-        sut[0] = Plist(string:"NEW")
+        sut[0] = Plist(plistObject:"NEW")
         if let rAr = sut.array, let p = rAr[0].string {
             XCTAssertEqual(p, "NEW", "")
         } else { XCTFail("") }
@@ -185,7 +232,7 @@ class Plist_test: XCTestCase {
     
     func test_givenDictionaryPlist_whenWriteSubscriptKeyNotInDic_thenInsertNewItem() {
         var sut = plistDicFromKeysValues([])
-        let p = Plist(string: "new")
+        let p = Plist(plistObject: "new")
         sut["k"] = p
         if let pStr = sut.dictionary!["k"], result = pStr.string {
             XCTAssertEqual(result, "new", "")
@@ -194,7 +241,7 @@ class Plist_test: XCTestCase {
     
     func test_givenDictionaryPlist_whenWriteSubscriptKeyInDic_thenOverrideExistingKey() {
         var sut = plistDicFromKeysValues([("key", "p")])
-        sut["key"] =  Plist(string: "NEW")
+        sut["key"] =  Plist(plistObject: "NEW")
         if let pStr = sut.dictionary!["key"], result = pStr.string {
             XCTAssertEqual(result, "NEW", "")
         } else { XCTFail("") }

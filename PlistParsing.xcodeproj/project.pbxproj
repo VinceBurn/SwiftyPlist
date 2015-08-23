@@ -11,6 +11,8 @@
 		B40B02DE1B87C520007DEB0E /* Plist_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B02DD1B87C520007DEB0E /* Plist_test.swift */; };
 		B40B02E31B87C582007DEB0E /* Plist.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B02E21B87C582007DEB0E /* Plist.swift */; };
 		B40B02E71B87C7A8007DEB0E /* Plist.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B02E21B87C582007DEB0E /* Plist.swift */; };
+		B45BD3FC1B894AEB0023DF9C /* Plist_initegrationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45BD3FB1B894AEB0023DF9C /* Plist_initegrationTest.swift */; };
+		B45BD3FE1B894BCF0023DF9C /* PListRootDic.plist in Resources */ = {isa = PBXBuildFile; fileRef = B45BD3FD1B894BCF0023DF9C /* PListRootDic.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,8 @@
 		B40B02DC1B87C520007DEB0E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B40B02DD1B87C520007DEB0E /* Plist_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plist_test.swift; sourceTree = "<group>"; };
 		B40B02E21B87C582007DEB0E /* Plist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plist.swift; sourceTree = "<group>"; };
+		B45BD3FB1B894AEB0023DF9C /* Plist_initegrationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plist_initegrationTest.swift; sourceTree = "<group>"; };
+		B45BD3FD1B894BCF0023DF9C /* PListRootDic.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = PListRootDic.plist; sourceTree = "<group>"; };
 		B4B94BD51B88B1F9005C5CDB /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = _Experiment/MyPlayground.playground; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -94,6 +98,7 @@
 		B40B02DA1B87C520007DEB0E /* PlistParsingTest */ = {
 			isa = PBXGroup;
 			children = (
+				B45BD3FB1B894AEB0023DF9C /* Plist_initegrationTest.swift */,
 				B40B02DD1B87C520007DEB0E /* Plist_test.swift */,
 				B40B02DB1B87C520007DEB0E /* Supporting Files */,
 			);
@@ -104,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				B40B02DC1B87C520007DEB0E /* Info.plist */,
+				B45BD3FD1B894BCF0023DF9C /* PListRootDic.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -186,6 +192,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B45BD3FE1B894BCF0023DF9C /* PListRootDic.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,6 +213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B40B02DE1B87C520007DEB0E /* Plist_test.swift in Sources */,
+				B45BD3FC1B894AEB0023DF9C /* Plist_initegrationTest.swift in Sources */,
 				B40B02E71B87C7A8007DEB0E /* Plist.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
