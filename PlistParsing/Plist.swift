@@ -24,8 +24,9 @@ public struct Plist {
     
     //MARK:- Entity Creation
     
-    /** Create a Plist from a Raw values that are Plist Convertible or Plist.
+    /** Create a Plist from values that are Plist Convertible or Plist.
     @discussion Accepted input are Plist compatible class and Plist struct
+    @note this is similar to init?(rawValue), but will also allow Plist as input (NOTE TO SELF: is this necessary or usefull?)
     @warning Will crash if not convertible
     */
     public init(plistObject: Any) {
