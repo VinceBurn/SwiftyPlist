@@ -101,9 +101,6 @@ extension Plist : RawRepresentable {
         case let data as NSData:
             self.entityType = .Data(data)
             
-        case let plist as Plist:
-            self.entityType = plist.entityType
-            
         case let array as NSArray:
             var pAr : [Plist] = []
             for any in array {
@@ -114,12 +111,6 @@ extension Plist : RawRepresentable {
                 }
             }
             self.entityType = .Array(pAr)
-            
-        case let array as [Plist]:
-            self.entityType = .Array(array)
-            
-        case let dictionary as [String : Plist]:
-            self.entityType = .Dictionary(dictionary)
             
         case let dictionary as NSDictionary:
             var dic : [String : Plist] = [:]

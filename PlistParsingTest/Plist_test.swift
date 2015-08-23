@@ -315,6 +315,12 @@ class Plist_test: XCTestCase {
         }
     }
     
+    func test_givenPlistInput_whenRawCreation_thenNil() {
+        let p = Plist(rawValue: "str")!
+        let sut = Plist(rawValue: p)
+        XCTAssertTrue(sut == nil, "Plist is not a Raw type for a Property list")
+    }
+    
     func test_givenArrayOfNonPropertyListItem_whenRawCreation_thenNil() {
         let sut = Plist(rawValue: nonPropertyListItems())
         XCTAssertTrue(sut == nil, "")
@@ -323,6 +329,12 @@ class Plist_test: XCTestCase {
     func test_givenArrayOfArrayOfNonPropertyList_whenRawCreation_thenNil() {
         let rootAr = [ 1, 2.3, nonPropertyListItems(), "String"]
         let sut = Plist(rawValue: rootAr)
+    }
+    
+    func test_givenArrayOfPlistArray_whenRawCreation_thenNil() {
+        let ar = [plistArrayFromStrings(["1", "2"])]
+        let sut = Plist(rawValue: ar)
+        XCTAssertTrue(sut == nil, "")
     }
     
     func test_givenDictionaryOfNonPropertyListItem_whenRawCreation_thenNil() {
@@ -349,6 +361,12 @@ class Plist_test: XCTestCase {
         let dic = [ "good" : "ok", "innerDic" : innerDic]
         let sut = Plist(rawValue: dic)
         XCTAssertTrue(sut == nil, "")
+    }
+    
+    func test_givenDicOfPlist_whenRawCreation_thenNil() {
+        let dic = ["key" : plistDicFromKeysValues([("key", "value")])]
+        let sut = Plist(rawValue: dic)
+        XCTAssertTrue(sut == nil, "Plist is not a raw type")
     }
     
     //MARK:- RawRepresentable [rawValue]
