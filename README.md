@@ -7,8 +7,10 @@ For now this repo is a personal exercise in implementing in a TDD manner a Plist
 ## Usage
 ```Swift
 let inputDic = plistDictionaryFromFile()
-let plist = Plist(plistObject: inputDic)
+var plist = Plist(plistObject: inputDic)
 let str = plist["array"]?[1].string
+let float = plist["float"]?.number as? Float
+plist["float"] = 1.1
 ```
 ## Current Philosophy
 **This may change after starting using it in real life situation**
@@ -16,4 +18,5 @@ let str = plist["array"]?[1].string
 * Allow chained subscript access to items in the property list
 * Keep the optional nature of dictionary access
 * Keep the out of bound crash of array access
-* Assume that the plist format is known by the calling code
+* Assume that the plist format is known by the calling code (e.g. what kind of number you are suppose to have for a given key)
+* Keep `Plist` a `struct` to have better control over mutability and have value semantic.
