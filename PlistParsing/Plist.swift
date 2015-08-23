@@ -53,7 +53,23 @@ public struct Plist {
         case let array as [Plist]:
             println()
             self.init(array: array)
-
+            
+        case let dictionary as [String : Plist]:
+            self.init(dictionary: dictionary)
+            
+        case let dictionary as NSDictionary:
+            var dic : [String : Plist] = [:]
+            for (k, value) in dictionary {
+                if let key = k as? String {
+                    let p = Plist(plistObject: value)
+                    dic[key] = p
+                } else {
+                    assertionFailure("Key of dictionary must be String")
+                }
+            }
+            
+            self.init(dictionary: dic)
+            
         default:
             print("value \(plistObject) is not a valid property list type")
             self.init(string: "")
@@ -97,7 +113,7 @@ public struct Plist {
     private init(array: [Plist]) {
         entityType = .Array(array)
     }
-    public init(dictionary: [String : Plist]) {
+    private init(dictionary: [String : Plist]) {
         entityType = .Dictionary(dictionary)
     }
 }

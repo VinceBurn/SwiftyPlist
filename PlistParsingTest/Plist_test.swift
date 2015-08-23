@@ -33,7 +33,7 @@ class Plist_test: XCTestCase {
             dic[k] = p
         }
         
-        let p = Plist(dictionary: dic)
+        let p = Plist(plistObject: dic)
         return p
     }
     
@@ -173,6 +173,26 @@ class Plist_test: XCTestCase {
         let sut = Plist(plistObject: p)
         if let result = sut.string {
             XCTAssertEqual(result, "p", "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack() {
+        let dic = NSDictionary()
+        let sut = Plist(plistObject: dic)
+        if let result = sut.dictionary {
+            XCTAssertEqual(result.count, 0, "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack() {
+        let date = NSDate()
+        let dic = NSDictionary(objectsAndKeys: "p", "str", 1, "int", date, "date")
+        let sut = Plist(plistObject: dic)
+        if let r = sut.dictionary, ps = r["str"]?.string, pi = r["int"]?.number as? Int, pd = r["date"]?.date {
+            XCTAssertEqual(r.count, 3, "")
+            XCTAssertEqual(ps, "p", "")
+            XCTAssertEqual(pi, 1, "")
+            XCTAssertTrue(pd.isEqualToDate(date), "")
         } else { XCTFail("") }
     }
     
