@@ -393,7 +393,77 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- RawRepresentable [rawValue]
+    func test_givenStringPlist_whenRawValue_thenString() {
+        let p = Plist.newWithRawValue("s")
+        if let sut = p.rawValue as? String {
+            XCTAssertEqual(sut, "s", "")
+        } else { XCTFail("") }
+    }
     
+    func test_givenNumberPlist_whenRawValue_thenNumber() {
+        let num = NSNumber(integer: 3)
+        let p = Plist.newWithRawValue(num)
+        if let sut = p.rawValue as? NSNumber, i = sut as? Int, f = sut as? Float, b = sut as? Bool {
+            XCTAssertTrue(sut.isEqualToNumber(num), "")
+            XCTAssertEqual(i, 3, "")
+            XCTAssertEqual(f, Float(3), "")
+            XCTAssertEqual(b, Bool(3), "")
+            XCTAssertTrue(b, "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenDatePlist_whenRawValue_thenDate() {
+        let date = NSDate()
+        let p = Plist.newWithRawValue(date)
+        if let sut = p.rawValue as? NSDate {
+            XCTAssertTrue(sut.isEqualToDate(date), "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenDataPlist_whenRawValue_thenData() {
+        let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let p = Plist.newWithRawValue(data)
+        if let sut = p.rawValue as? NSData {
+            XCTAssertTrue(sut.isEqualToData(data), "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenEmptyArrayPlist_whenRawValue_thenNSArray() {
+        let p = Plist.newWithRawValue([])
+        if let sut = p.rawValue as? NSArray {
+            XCTAssertEqual(sut.count, 0, "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenFilledArrayPlist_whenRawValue_thenNSArray() {
+        let date = NSDate()
+        let ar = ["str", 1, date]
+        let p = Plist.newWithRawValue(ar)
+        if let sut = p.rawValue as? NSArray, str = sut[0] as? String, i = sut[1] as? Int, d = sut[2] as? NSDate {
+            XCTAssertEqual(str, "str", "")
+            XCTAssertEqual(i, 1, "")
+            XCTAssertTrue(d.isEqualToDate(date), "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenEmptyDicPlist_whenRawValue_thenNSDictionary() {
+        let p = Plist.newWithRawValue([:])
+        if let sut = p.rawValue as? NSDictionary {
+            XCTAssertEqual(sut.count, 0, "")
+        } else { XCTFail("") }
+    }
+    
+    func test_givenFilledDicPlist_whenRawValue_thenNSDictionary() {
+        let date = NSDate()
+        let ar = ["in ar"];
+        let dic = [ "date" : date, "int" : 1, "ar" : ar, "str" : "allo!"]
+        let p = Plist.newWithRawValue(dic)
+        if let sut = p.rawValue as? NSDictionary, d = sut["date"] as? NSDate, a = sut["ar"] as? NSArray {
+            XCTAssertTrue(d.isEqualToDate(date), "")
+            XCTAssertEqual(a.count, 1, "")
+            XCTAssertEqual(sut.count, 4, "")
+        } else { XCTFail("") }
+    }
     
     //MARK:- Subscripting Array
     func test_givenArrayPlist_whenReadSubscripting_thenRetreiveTheProperIndex() {

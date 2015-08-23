@@ -136,8 +136,34 @@ extension Plist : RawRepresentable {
     }
     
     public var rawValue: Any {
+        //NOTE -->  Consider moving rawValue to AnyObject or to a PlistConvertibleProtocol, for which the possible class need to have extension
         get {
-            return ""
+            switch entityType {
+            case .String(let value):
+                return value
+            case .Number(let value):
+                return value
+            case .Date(let value) :
+                return value
+            case .Data(let value):
+                return value
+            case .Array(let value):
+                var output = [AnyObject]()
+                for p in value {
+                    if let raw: AnyObject = p.rawValue as? AnyObject {
+                        output.append(raw)
+                    }
+                }
+                return output
+            case .Dictionary(let value):
+                var output = [String : AnyObject]()
+                for (key, val) in value {
+                    if let raw: AnyObject = val.rawValue as? AnyObject {
+                        output[key] = raw
+                    }
+                }
+                return output
+            }
         }
     }
 }
