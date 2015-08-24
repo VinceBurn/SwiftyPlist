@@ -12,12 +12,16 @@ struct myStruct {
 func switchOnAny(any: Any) -> String {
     println("Dynamic Type == \(any.dynamicType)")
     switch any {
+//    case let array where reflect(any).disposition == MirrorDisposition.IndexContainer:
+//        return "black magic"
 //    case let array as ArrayType:
 //        return "Stack"
     case let array as [Any]:
         return "Array"
     case let array as NSArray:
         return "NSArray"
+    case let array as [myStruct]:
+        return "mystruct"
     default:
         return "Default"
     }
