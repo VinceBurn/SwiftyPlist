@@ -21,3 +21,24 @@ plist["float"] = 1.1
 * Assume that the plist format is known by the calling code (e.g. what kind of number you are suppose to have for a given key)
 * Keep `Plist` a `struct` to have better control over mutability and have value semantic.
 * Version number match Swift version. e.g. Version 1.2.x are version written for Swift 1.2.
+
+## Requirements
+
+iOS 8.0 (might work on OSX and iOS 7, but not tested (officially supported) on those system)
+
+## Installation
+
+SwiftyPlist is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod "SwiftyPlist"
+```
+
+## Author
+
+Vincent Bernier
+
+## License
+
+SwiftyPlist is available under the MIT license. See the LICENSE file for more info.
