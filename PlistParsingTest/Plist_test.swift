@@ -524,7 +524,7 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- Subscripting Chaining
-    func test_givenDicArrayDicPlist_whenWriteOnExistingSubscript_theValueIsUpdated() {
+    func test_givenDicArrayDicPlist_whenWriteOnExistingSubscript_thenValueIsUpdated() {
         let raw = [ "ar" : [["key" : "value"]] ]
         var sut = Plist(plistObject: raw)
         sut["ar"]?[0]["key"] = Plist(plistObject: "NEW")
@@ -533,5 +533,101 @@ class Plist_test: XCTestCase {
         } else { XCTFail("") }
     }
     
+    //MARK:- Equatable
+    func assert_equalityFalseWithRawValues(#left: Any, right: Any, message: String) {
+        let lp = Plist.newWithRawValue(left)
+        let rp = Plist.newWithRawValue(right)
+        XCTAssertNotEqual(lp, rp, message)
+    }
     
+    func assert_eqaulityTrueRawValue(#left: Any, right: Any, message: String) {
+        let lp = Plist.newWithRawValue(left)
+        let rp = Plist.newWithRawValue(right)
+        
+        XCTAssertEqual(lp, rp, message)
+    }
+    
+    func test_givenStringAndNumber_whenEqual_thenFalse() {
+        assert_equalityFalseWithRawValues(left: "s", right: 1, message: "string and int")
+    }
+    
+    func test_givenSameStringValue_whenEqual_thenTrue() {
+        assert_eqaulityTrueRawValue(left: "s", right: "s", message: "string and string")
+    }
+    
+    func test_givenDifferentStringValue_whenEqual_thenFalse() {
+        assert_equalityFalseWithRawValues(left: "a", right: "b", message: "string and string")
+    }
+    
+    func test_givenSameIntValue_whenEqual_thenTrue() {
+        assert_eqaulityTrueRawValue(left: 5, right: 5, message: "Int and Int")
+    }
+    
+    func test_givenDifferentIntValue_whenEqual_thenFalse() {
+        assert_equalityFalseWithRawValues(left: 2, right: 3, message: "Int and Int")
+    }
+    
+    func test_givenSameFloatValue_whenEqual_thenTrue() {
+        assert_eqaulityTrueRawValue(left: Float(2.2), right:Float(2.2) , message: "Float and Float")
+    }
+    
+    func test_givenDifferentFloatValue_whenEqual_thenFalse() {
+        assert_equalityFalseWithRawValues(left: Float(2.2), right: Float(2.1), message: "Float and Float")
+    }
+    
+    func test_givenSameBoolValue_whenEqual_thenTrue() {
+        assert_eqaulityTrueRawValue(left: true, right: true, message: "bool and bool")
+        assert_eqaulityTrueRawValue(left: false, right: false, message: "bool and bool")
+    }
+    
+    func test_givenDifferentBoolValue_whenEqual_thenFalse() {
+        assert_equalityFalseWithRawValues(left: true, right: false, message: "bool and bool")
+        assert_equalityFalseWithRawValues(left: false, right: true, message: "bool and bool")
+    }
+    
+    func test_givenSameDateValue_whenEqual_thenTrue() {
+        assert_eqaulityTrueRawValue(left: NSDate(timeIntervalSince1970: 3), right: NSDate(timeIntervalSince1970: 3), message: "date and date")
+    }
+    
+    func test_giventDifferentDate_whenEqual_thenFalse() {
+        assert_equalityFalseWithRawValues(left: NSDate(timeIntervalSince1970: 3), right: NSDate(timeIntervalSince1970: 4), message: "Date and Date")
+    }
+    
+    func test_givenSameDataValue_whenEqual_thenTrue() {
+        let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
+        assert_eqaulityTrueRawValue(left: data, right: data, message: "data and data")
+    }
+    
+    func test_givenDifferentDataValue_whenEqual_thenFalse() {
+        let left = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let right = "alloa".dataUsingEncoding(NSUTF8StringEncoding)!
+        assert_equalityFalseWithRawValues(left: left, right: right, message: "data and data")
+    }
+    
+    func test_givenSameDeepArray_whenEqual_thenTrue() {
+        assert_eqaulityTrueRawValue(left: ["0", "1"], right: ["0", "1"], message: "Array and Array[String]")
+        assert_eqaulityTrueRawValue(left: [0, 1], right: [0, 1], message: "Array and Array[Int]")
+        assert_eqaulityTrueRawValue(left: [true, false, false], right: [true, false, false], message: "Array and Array[bool]")
+        assert_eqaulityTrueRawValue(left: [5, "8", false], right: [5, "8", false], message: "")
+        assert_eqaulityTrueRawValue(left: [5, ["8", false]], right: [5, ["8", false]], message: "")
+    }
+    
+    func test_givenDifferentDeepArray_whenEqual_thenFalse() {
+        assert_equalityFalseWithRawValues(left: [1, 2], right: [0, 1], message: "")
+        assert_equalityFalseWithRawValues(left: [true, false], right: [false, false], message: "")
+        assert_equalityFalseWithRawValues(left: [1, 2, [3, ""], []], right: [], message: "")
+        assert_equalityFalseWithRawValues(left: [1, 2, [3, ""], []], right: [1, 2, [3, "BOB"], []], message: "")
+    }
+    
+    func test_givenSameDeepDictionary_whenEqual_thenTrue() {
+        let date = NSDate()
+        assert_eqaulityTrueRawValue(left: [ "0" : 0, "1" : "bob", "date" : date], right: [ "0" : 0, "1" : "bob", "date" : date], message: "")
+        // ADD MORE TEST
+    }
+    
+    func test_givenDifferentDeepDictionary_whenEqyal_thenFalse() {
+        let date = NSDate()
+        assert_equalityFalseWithRawValues(left: [ "0" : 0, "1" : "bob", "date" : date], right: [ "0" : 0, "1" : "bob!", "date" : date], message: "")
+        //  ADD MORE TEST
+    }
 }

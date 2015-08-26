@@ -262,6 +262,25 @@ public extension Plist {
     }
 }
 
-//MARK:- Equatable
-//todo
+//MARK:- Equatable 
+extension Plist : Equatable {}
 
+public func ==(lhs: Plist, rhs: Plist) -> Bool {
+    let tuple = (lhs.entityType, rhs.entityType)
+    switch tuple {
+    case let (.String(left), .String(right)):
+        return left == right
+    case let (.Number(left), .Number(right)):
+        return left.isEqualToNumber(right)
+    case let (.Date(left), .Date(right)):
+        return left.isEqualToDate(right)
+    case let (.Data(left), .Data(right)):
+        return left.isEqualToData(right)
+    case let (.Array(left), .Array(right)):
+        return left == right
+    case let (.Dictionary(left), .Dictionary(right)):
+        return left == right
+    default:
+        return false
+    }
+}
