@@ -630,4 +630,94 @@ class Plist_test: XCTestCase {
         assert_equalityFalseWithRawValues(left: [ "0" : 0, "1" : "bob", "date" : date], right: [ "0" : 0, "1" : "bob!", "date" : date], message: "")
         //  ADD MORE TEST
     }
+    
+    //MARK:- For in support [SequenceType]
+    //MARK: No Iteration
+    func assert_givenPlist_whenGenerate_thenNoIteration(p: Plist, message: String) {
+        var gen = p.generate()
+        var counter = 0
+        for _ in p {
+            ++counter
+        }
+        XCTAssertEqual(counter, 0, message)
+        XCTAssertTrue(gen.next() == nil, message)
+    }
+    
+    func assert_givenNonSequencePlist_whenGenerate_thenNoIteration(p: Plist) {
+        let message = "\(p.rawValue) is not a SequenceType to iterate over"
+        assert_givenPlist_whenGenerate_thenNoIteration(p, message: message)
+    }
+    
+    func assert_givenEmptySequencePlist_whenGenerate_thenNoIteration(p: Plist) {
+        let message = "\(p.rawValue) : empty collection won't have iteration"
+        assert_givenPlist_whenGenerate_thenNoIteration(p, message: message)
+    }
+    
+    func test_givenStringPlist_whenGenerate_thenGeneratorReturnNil() {
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue("0"))
+    }
+    
+    func test_givenDatePlist_whenGenerate_thenNoIteration() {
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(NSDate()))
+    }
+    
+    func test_givenDataPlist_whenGenerate_thenNoIteration() {
+        let data = "a".dataUsingEncoding(NSUTF8StringEncoding)!
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(data))
+    }
+    
+    func test_givenIntPlist_whenGenerate_thenNoIteration() {
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(44))
+    }
+    
+    func test_givenFloatPlist_whenGenerate_thenNoIteration() {
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(Float(44.4)))
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(Double(44.4)))
+    }
+    
+    func test_givenBoolPlist_whenGenerate_thenNoIteration() {
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(true))
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(false))
+    }
+    
+    func test_givenEmptyArray_whenGenerate_thenNoIteration() {
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue([]))
+    }
+    
+    //MARK: Iteration
+    func test_givenPopulatedArray_whenGenerate_thenIteration() {
+        let ar = [ "0", "1", "2"]
+        let p = Plist.newWithRawValue(ar)
+        
+        var gen = p.generate()
+        var counter = 0
+        for (key, plist) in p {
+            XCTAssertEqual(plist.string!, ar[counter], "Plist are retreive in the array's order")
+            let str = "\(counter)"
+            XCTAssertEqual(key, str, "The key is a string representation of the index")
+            gen.next()
+            ++counter
+        }
+        
+        let message = "The count of items at the output match the input count"
+        XCTAssertEqual(counter, ar.count, message)
+        XCTAssertTrue(gen.next() == nil, message)
+    }
+    
+    func test_givenPopulatedDictionary_whenGenerate_thenIteration() {
+        let dic = ["1" : 1, "3" : 3]
+        let p = Plist.newWithRawValue(dic)
+        
+        var gen = p.generate()
+        var values = [String : Int]()
+        for (key, plist) in p {
+            let str = "\(plist.number as! Int)"
+            values[key] = (plist.number as! Int)
+            XCTAssertEqual(key, str, "")
+            gen.next()
+        }
+        
+        XCTAssertEqual(dic, values, "")
+    }
+    
 }

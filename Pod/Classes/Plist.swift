@@ -284,3 +284,31 @@ public func ==(lhs: Plist, rhs: Plist) -> Bool {
         return false
     }
 }
+
+//MARK:- 'for in' support for Plist Dictionary and Array
+extension Plist: Swift.SequenceType {
+
+    /** Enable For in support by providing a Generator over SequenceType Plist (Array, and Dictionary)
+    @note Calling this method on a non-SequenceType will make 0 iteration in a For in loop */
+    public func generate() -> GeneratorOf<(Swift.String, Plist)> {
+        switch entityType {
+        case .Array(let value):
+            var index = 0
+            var generator = value.generate()
+            return GeneratorOf<(Swift.String, Plist)> {
+                if let next = generator.next() {
+                    let str = "\(index++)"
+                    return (str, next)
+                } else {
+                    return nil
+                }
+            }
+        case .Dictionary(let value):
+            var generator = value.generate()
+            return GeneratorOf<(Swift.String, Plist)> { return generator.next() }
+        default:
+            return GeneratorOf<(Swift.String, Plist)> { return nil }
+        }
+    }
+}
+
