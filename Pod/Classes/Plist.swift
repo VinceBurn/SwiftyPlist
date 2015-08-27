@@ -4,7 +4,7 @@
 //
 //  Created by Vincent Bernier on 21-08-2015.
 //  Inspired by https://github.com/monyschuk/PropertyList
-//  Copyright (c) 2015 Vincent Bernier. Use it a you see fit. No guarantee of support.
+//  Copyright (c) 2015 Vincent Bernier. Use it as you see fit. No guarantee of support.
 //
 
 import Foundation
@@ -135,6 +135,7 @@ extension Plist : RawRepresentable {
         return Plist(rawValue: rawValue)!
     }
     
+    /** Convert back a Plist to it's Raw representation */
     public var rawValue: Any {
         //NOTE -->  Consider moving rawValue to AnyObject or to a PlistConvertibleProtocol, for which the possible class need to have extension
         get {
@@ -265,6 +266,9 @@ public extension Plist {
 //MARK:- Equatable 
 extension Plist : Equatable {}
 
+/** Equality is based on the stored value for the Plist element
+@Warning Float equality remains Float equality
+*/
 public func ==(lhs: Plist, rhs: Plist) -> Bool {
     let tuple = (lhs.entityType, rhs.entityType)
     switch tuple {
@@ -288,7 +292,7 @@ public func ==(lhs: Plist, rhs: Plist) -> Bool {
 //MARK:- 'for in' support for Plist Dictionary and Array
 extension Plist: Swift.SequenceType {
 
-    /** Enable For in support by providing a Generator over SequenceType Plist (Array, and Dictionary)
+    /** Enable 'for in' support by providing a Generator over SequenceType Plist (Array, and Dictionary)
     @note Calling this method on a non-SequenceType will make 0 iteration in a For in loop */
     public func generate() -> GeneratorOf<(Swift.String, Plist)> {
         switch entityType {
