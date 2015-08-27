@@ -50,6 +50,7 @@
 		B45BD4011B8A19DA0023DF9C /* FaillableInit.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = FaillableInit.playground; sourceTree = "<group>"; };
 		B48547061B8FC10700F536A4 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B48547071B8FC10700F536A4 /* SwiftyPlist.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = SwiftyPlist.podspec; sourceTree = "<group>"; };
+		B48547081B8FC2FA00F536A4 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +122,7 @@
 		B447A9CA1B8DD16800923AB6 /* __CocoaPods Related */ = {
 			isa = PBXGroup;
 			children = (
+				B48547081B8FC2FA00F536A4 /* LICENSE */,
 				B48547061B8FC10700F536A4 /* README.md */,
 				B48547071B8FC10700F536A4 /* SwiftyPlist.podspec */,
 			);
