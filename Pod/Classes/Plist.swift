@@ -26,7 +26,8 @@ public struct Plist {
     
     /** Create a Plist from values that are Plist Convertible or Plist.
     @discussion Accepted input are Plist compatible class and Plist struct
-    @note this is similar to init?(rawValue), but will also allow Plist as input (NOTE TO SELF: is this necessary or usefull?)
+    @note this is similar to init?(rawValue), but will also allow Plist, [Plist] and [String : Plist] as input
+        -->(NOTE TO SELF: is this necessary or usefull... Well... It is when you need to add or remove entity from a .Array)
     @warning Will crash if not convertible
     */
     public init(plistObject: Any) {
