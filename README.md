@@ -1,4 +1,7 @@
-# SwiftyPlist
+# SwiftyPlist ![License MIT](https://img.shields.io/cocoapods/l/SwiftyPlist.svg)
+
+[![Badge w/ Version](https://img.shields.io/cocoapods/v/SwiftyPlist.svg)](http://cocoadocs.org/docsets/SwiftyPlist/1.2.0/)
+[![Badge w/ Platform](https://img.shields.io/cocoapods/p/SwiftyPlist.svg)](http://cocoadocs.org/docsets/SwiftyPlist/)
 
 ### Note
 
@@ -38,7 +41,3 @@ pod "SwiftyPlist"
 ## Author
 
 Vincent Bernier
-
-## License
-
-SwiftyPlist is available under the MIT license. See the LICENSE file for more info.
