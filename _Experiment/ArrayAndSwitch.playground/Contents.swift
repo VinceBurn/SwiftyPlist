@@ -10,7 +10,7 @@ struct myStruct {
 }
 
 func switchOnAny(any: Any) -> String {
-    println("Dynamic Type == \(any.dynamicType)")
+    print("Dynamic Type == \(any.dynamicType)")
     switch any {
 //    case let array where reflect(any).disposition == MirrorDisposition.IndexContainer:
 //        return "black magic"
@@ -32,9 +32,9 @@ let stringArray : [String] = ["Bob", "Roger"]
 let intArray = [1, 2, 3]
 let customStructArray : [myStruct] = []
 
-println("\t\touput : \(switchOnAny([]))")
-println("\t\touput : \(switchOnAny(emptyStringArray))")
-println("\t\touput : \(switchOnAny(stringArray))")
-println("\t\touput : \(switchOnAny(intArray))")
-println("\t\touput : \(switchOnAny(customStructArray))")
+print("\t\touput : \(switchOnAny([]))")
+print("\t\touput : \(switchOnAny(emptyStringArray))")
+print("\t\touput : \(switchOnAny(stringArray))")
+print("\t\touput : \(switchOnAny(intArray))")
+print("\t\touput : \(switchOnAny(customStructArray))")
 

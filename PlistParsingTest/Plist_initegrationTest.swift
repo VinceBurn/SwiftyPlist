@@ -17,7 +17,7 @@ class Plist_initegrationTest: XCTestCase {
         let url = bundle.URLForResource("PListRootDic", withExtension: "plist")
         let plistDic = NSDictionary(contentsOfURL: url!)
         if plistDic == nil {
-            println("ERROR while loading file from disk")
+            print("ERROR while loading file from disk")
         }
         
         return plistDic!
