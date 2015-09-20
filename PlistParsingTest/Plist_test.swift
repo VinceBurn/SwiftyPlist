@@ -458,7 +458,7 @@ class Plist_test: XCTestCase {
     func test_givenFilledDicPlist_whenRawValue_thenNSDictionary() {
         let date = NSDate()
         let ar = ["in ar"];
-        let dic = [ "date" : date, "int" : 1, "ar" : ar, "str" : "allo!"]
+        let dic = [ "date" : date, "int" : 1, "ar" : ar, "str" : "allo!"] as NSDictionary
         let p = Plist.newWithRawValue(dic)
         if let sut = p.rawValue as? NSDictionary, d = sut["date"] as? NSDate, a = sut["ar"] as? NSArray {
             XCTAssertTrue(d.isEqualToDate(date), "")
