@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "SwiftyPlist"
-  s.version          = "1.2.0"
+  s.version          = "2.0.0"
   s.summary          = "A Plist representation in Swift"
 
 # This description is used to generate tags and improve search results.

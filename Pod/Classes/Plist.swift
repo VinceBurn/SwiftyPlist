@@ -76,7 +76,7 @@ public struct Plist {
             self.entityType = .Dictionary(dic)
             
         default:
-            print("value \(plistObject) is not a valid property list type")
+            print("value \(plistObject) is not a valid property list type", terminator: "\n")
             self.entityType = .String("")
             assertionFailure("Use only property list complient class.")
         }
@@ -313,12 +313,12 @@ extension Plist: Swift.SequenceType {
 
     /** Enable 'for in' support by providing a Generator over SequenceType Plist (Array, and Dictionary)
     :Note: Calling this method on a non-SequenceType will make 0 iteration in a For in loop */
-    public func generate() -> GeneratorOf<(Swift.String, Plist)> {
+    public func generate() -> AnyGenerator<(Swift.String, Plist)> {
         switch entityType {
         case .Array(let value):
             var index = 0
             var generator = value.generate()
-            return GeneratorOf<(Swift.String, Plist)> {
+            return anyGenerator {
                 if let next = generator.next() {
                     let str = "\(index++)"
                     return (str, next)
@@ -328,9 +328,9 @@ extension Plist: Swift.SequenceType {
             }
         case .Dictionary(let value):
             var generator = value.generate()
-            return GeneratorOf<(Swift.String, Plist)> { return generator.next() }
+            return anyGenerator { return generator.next() }
         default:
-            return GeneratorOf<(Swift.String, Plist)> { return nil }
+            return anyGenerator { return nil }
         }
     }
 }
