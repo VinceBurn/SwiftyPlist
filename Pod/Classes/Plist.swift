@@ -76,7 +76,7 @@ public struct Plist {
             self.entityType = .Dictionary(dic)
             
         default:
-            print("value \(plistObject) is not a valid property list type", appendNewline: true)
+            print("value \(plistObject) is not a valid property list type", terminator: "\n")
             self.entityType = .String("")
             assertionFailure("Use only property list complient class.")
         }
