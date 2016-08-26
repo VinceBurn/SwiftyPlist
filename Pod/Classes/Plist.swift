@@ -318,7 +318,7 @@ extension Plist: Swift.SequenceType {
         case .Array(let value):
             var index = 0
             var generator = value.generate()
-            return anyGenerator {
+            return AnyGenerator {
                 if let next = generator.next() {
                     let str = "\(index)"
                     index += 1
@@ -329,9 +329,9 @@ extension Plist: Swift.SequenceType {
             }
         case .Dictionary(let value):
             var generator = value.generate()
-            return anyGenerator { return generator.next() }
+            return AnyGenerator { return generator.next() }
         default:
-            return anyGenerator { return nil }
+            return AnyGenerator { return nil }
         }
     }
 }
