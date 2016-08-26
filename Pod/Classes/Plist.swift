@@ -320,7 +320,8 @@ extension Plist: Swift.SequenceType {
             var generator = value.generate()
             return anyGenerator {
                 if let next = generator.next() {
-                    let str = "\(index++)"
+                    let str = "\(index)"
+                    index += 1
                     return (str, next)
                 } else {
                     return nil

@@ -639,7 +639,7 @@ class Plist_test: XCTestCase {
         let gen = p.generate()
         var counter = 0
         for _ in p {
-            ++counter
+            counter += 1
         }
         XCTAssertEqual(counter, 0, message)
         XCTAssertTrue(gen.next() == nil, message)
@@ -698,7 +698,7 @@ class Plist_test: XCTestCase {
             let str = "\(counter)"
             XCTAssertEqual(key, str, "The key is a string representation of the index")
             gen.next()
-            ++counter
+            counter += 1
         }
         
         let message = "The count of items at the output match the input count"
