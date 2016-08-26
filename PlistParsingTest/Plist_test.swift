@@ -229,7 +229,7 @@ class Plist_test: XCTestCase {
     func test_givenArrayOfArrayInput_whenCreation_thenCanGetTheValuesBack() {
         let sut = Plist(plistObject: [plistArrayFromStrings(["p0", "p1"])])
         if let rAr = sut.array, let resultAr = rAr[0].array where resultAr.count == 2  {
-            for var i = 0; i < resultAr.count; ++i {
+            for i in 0 ..< resultAr.count {
                 let s = resultAr[i]
                 if let str = s.string {
                     let controlStr = "p\(i)"
