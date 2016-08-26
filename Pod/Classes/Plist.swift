@@ -13,14 +13,14 @@ import Swift
 /** Goal : Represent the **node** and **leaf** of a Plist tree */
 public struct Plist {
     
-    private var entityType : EntityType
-    private enum EntityType {
-        case String(Swift.String)
-        case Number(NSNumber)
-        case Date(NSDate)
-        case Data(NSData)
-        case Array([Plist])
-        case Dictionary([Swift.String : Plist])
+    fileprivate var entityType : EntityType
+    fileprivate enum EntityType {
+        case string(Swift.String)
+        case number(NSNumber)
+        case date(Foundation.Date)
+        case data(Foundation.Data)
+        case array([Plist])
+        case dictionary([Swift.String : Plist])
     }
     
     //MARK:- Entity Creation
@@ -35,16 +35,16 @@ public struct Plist {
         switch plistObject {
             
         case let string as String:
-            self.entityType = .String(string)
+            self.entityType = .string(string)
             
         case let num as NSNumber:
-            self.entityType = .Number(num)
+            self.entityType = .number(num)
             
-        case let date as NSDate:
-            self.entityType = .Date(date)
+        case let date as Date:
+            self.entityType = .date(date)
             
-        case let data as NSData:
-            self.entityType = .Data(data)
+        case let data as Data:
+            self.entityType = .data(data)
             
         case let plist as Plist:
             self.entityType = plist.entityType
@@ -55,13 +55,13 @@ public struct Plist {
                 let p = Plist(plistObject: any)
                 pAr.append(p)
             }
-            self.entityType = .Array(pAr)
+            self.entityType = .array(pAr)
             
         case let array as [Plist]:
-            self.entityType = .Array(array)
+            self.entityType = .array(array)
             
         case let dictionary as [String : Plist]:
-            self.entityType = .Dictionary(dictionary)
+            self.entityType = .dictionary(dictionary)
             
         case let dictionary as NSDictionary:
             var dic : [String : Plist] = [:]
@@ -73,11 +73,11 @@ public struct Plist {
                     assertionFailure("Key of dictionary must be String")
                 }
             }
-            self.entityType = .Dictionary(dic)
+            self.entityType = .dictionary(dic)
             
         default:
             print("value \(plistObject) is not a valid property list type", terminator: "\n")
-            self.entityType = .String("")
+            self.entityType = .string("")
             assertionFailure("Use only property list complient class.")
         }
     }
@@ -95,16 +95,16 @@ extension Plist : RawRepresentable {
         switch rawValue {
             
         case let string as String:
-            self.entityType = .String(string)
+            self.entityType = .string(string)
             
         case let num as NSNumber:
-            self.entityType = .Number(num)
+            self.entityType = .number(num)
             
-        case let date as NSDate:
-            self.entityType = .Date(date)
+        case let date as Date:
+            self.entityType = .date(date)
             
-        case let data as NSData:
-            self.entityType = .Data(data)
+        case let data as Data:
+            self.entityType = .data(data)
             
         case let array as NSArray:
             var pAr : [Plist] = []
@@ -115,18 +115,18 @@ extension Plist : RawRepresentable {
                     return nil
                 }
             }
-            self.entityType = .Array(pAr)
+            self.entityType = .array(pAr)
             
         case let dictionary as NSDictionary:
             var dic : [String : Plist] = [:]
             for (k, value) in dictionary {
-                if let key = k as? String, p = Plist(rawValue: value) {
+                if let key = k as? String, let p = Plist(rawValue: value) {
                     dic[key] = p
                 } else {
                     return nil
                 }
             }
-            self.entityType = .Dictionary(dic)
+            self.entityType = .dictionary(dic)
             
         default:
             return nil
@@ -135,7 +135,7 @@ extension Plist : RawRepresentable {
     
     /** Convenience method to unwrap the result of init?(rawValue:)
     :warning: Method will crash if an error occure */
-    public static func newWithRawValue(rawValue: Any) -> Plist {
+    public static func newWithRawValue(_ rawValue: Any) -> Plist {
         return Plist(rawValue: rawValue)!
     }
     
@@ -144,15 +144,15 @@ extension Plist : RawRepresentable {
         //NOTE -->  Consider moving rawValue to AnyObject or to a PlistConvertibleProtocol, for which the possible class need to have extension
         get {
             switch entityType {
-            case .String(let value):
+            case .string(let value):
                 return value
-            case .Number(let value):
+            case .number(let value):
                 return value
-            case .Date(let value) :
+            case .date(let value) :
                 return value
-            case .Data(let value):
+            case .data(let value):
                 return value
-            case .Array(let value):
+            case .array(let value):
                 var output = [AnyObject]()
                 for p in value {
                     if let raw: AnyObject = p.rawValue as? AnyObject {
@@ -160,7 +160,7 @@ extension Plist : RawRepresentable {
                     }
                 }
                 return output
-            case .Dictionary(let value):
+            case .dictionary(let value):
                 var output = [String : AnyObject]()
                 for (key, val) in value {
                     if let raw: AnyObject = val.rawValue as? AnyObject {
@@ -180,7 +180,7 @@ public extension Plist {
     public var string : String? {
         get {
             switch entityType {
-            case let .String(value):
+            case let .string(value):
                 return value
             default:
                 return nil;
@@ -191,7 +191,7 @@ public extension Plist {
     public var number : NSNumber? {
         get {
             switch entityType {
-            case let .Number(value):
+            case let .number(value):
                 return value
             default:
                 return nil;
@@ -201,10 +201,10 @@ public extension Plist {
     //TODO: Add convinience to get Int, Float and Bool
     
     /** :return: a NSDate if Plist **leaf** is a Date, nil otherwise */
-    public var date : NSDate? {
+    public var date : Date? {
         get {
             switch entityType {
-            case let .Date(value):
+            case let .date(value):
                 return value
             default:
                 return nil;
@@ -212,10 +212,10 @@ public extension Plist {
         }
     }
     /** :return: a NSData if Plist **leaf** is a Data, nil otherwise */
-    public var data : NSData? {
+    public var data : Data? {
         get {
             switch entityType {
-            case let .Data(value):
+            case let .data(value):
                 return value
             default:
                 return nil;
@@ -226,7 +226,7 @@ public extension Plist {
     public var array : [Plist]? {
         get {
             switch entityType {
-            case let .Array(value):
+            case let .array(value):
                 return value
             default:
                 return nil;
@@ -237,7 +237,7 @@ public extension Plist {
     public var dictionary : [String : Plist]? {
         get {
             switch entityType {
-            case let .Dictionary(value):
+            case let .dictionary(value):
                 return value
             default:
                 return nil;
@@ -258,7 +258,7 @@ public extension Plist {
         set(newValue) {
             var ar = self.array!
             ar[index] = newValue
-            entityType = .Array(ar)
+            entityType = .array(ar)
         }
     }
 }
@@ -275,7 +275,7 @@ public extension Plist {
         set(newValue) {
             var dic = self.dictionary!
             dic[key] = newValue
-            entityType = .Dictionary(dic)
+            entityType = .dictionary(dic)
         }
     }
 }
@@ -290,17 +290,17 @@ extension Plist : Equatable {}
 public func ==(lhs: Plist, rhs: Plist) -> Bool {
     let tuple = (lhs.entityType, rhs.entityType)
     switch tuple {
-    case let (.String(left), .String(right)):
+    case let (.string(left), .string(right)):
         return left == right
-    case let (.Number(left), .Number(right)):
-        return left.isEqualToNumber(right)
-    case let (.Date(left), .Date(right)):
-        return left.isEqualToDate(right)
-    case let (.Data(left), .Data(right)):
-        return left.isEqualToData(right)
-    case let (.Array(left), .Array(right)):
+    case let (.number(left), .number(right)):
+        return left.isEqual(to: right)
+    case let (.date(left), .date(right)):
+        return (left == right)
+    case let (.data(left), .data(right)):
+        return (left == right)
+    case let (.array(left), .array(right)):
         return left == right
-    case let (.Dictionary(left), .Dictionary(right)):
+    case let (.dictionary(left), .dictionary(right)):
         return left == right
     default:
         return false
@@ -309,16 +309,16 @@ public func ==(lhs: Plist, rhs: Plist) -> Bool {
 
 //MARK:- 'for in' support for Plist Dictionary and Array
 /** Support for Plist use in **for in** loop */
-extension Plist: Swift.SequenceType {
+extension Plist: Swift.Sequence {
 
     /** Enable 'for in' support by providing a Generator over SequenceType Plist (Array, and Dictionary)
     :Note: Calling this method on a non-SequenceType will make 0 iteration in a For in loop */
-    public func generate() -> AnyGenerator<(Swift.String, Plist)> {
+    public func makeIterator() -> AnyIterator<(Swift.String, Plist)> {
         switch entityType {
-        case .Array(let value):
+        case .array(let value):
             var index = 0
-            var generator = value.generate()
-            return AnyGenerator {
+            var generator = value.makeIterator()
+            return AnyIterator {
                 if let next = generator.next() {
                     let str = "\(index)"
                     index += 1
@@ -327,11 +327,11 @@ extension Plist: Swift.SequenceType {
                     return nil
                 }
             }
-        case .Dictionary(let value):
-            var generator = value.generate()
-            return AnyGenerator { return generator.next() }
+        case .dictionary(let value):
+            var generator = value.makeIterator()
+            return AnyIterator { return generator.next() }
         default:
-            return AnyGenerator { return nil }
+            return AnyIterator { return nil }
         }
     }
 }
