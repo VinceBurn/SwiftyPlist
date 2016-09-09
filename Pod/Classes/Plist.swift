@@ -163,6 +163,7 @@ extension Plist : RawRepresentable {
             case .dictionary(let value):
                 var output = [String : AnyObject]()
                 for (key, val) in value {
+                    // FIXME: https://bugs.swift.org/browse/SR-2420 (probably relate to this bug in Xcode 8 beta 6
                     if let raw: AnyObject = val.rawValue as? AnyObject {
                         output[key] = raw
                     }
