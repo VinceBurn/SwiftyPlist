@@ -26,10 +26,10 @@ public struct Plist {
     //MARK:- Entity Creation
     
     /** Create a Plist from values that are Plist Convertible or Plist.
-    :discussion: Accepted input are Plist compatible class and Plist struct
-    :note: this is similar to init?(rawValue), but will also allow Plist, [Plist] and [String : Plist] as input
+    - parameter plistObject: Accepted input are Plist compatible classes and Plist structs
+    - note: this is similar to init?(rawValue), but will also allow Plist, [Plist] and [String : Plist] as input
         -->(NOTE TO SELF: is this necessary or usefull... Well... It is when you need to add or remove entity from a .Array)
-    :warning: Will crash if not convertible
+    - warning: Will crash if not convertible
     */
     public init(plistObject: Any) {
         switch plistObject {
@@ -85,7 +85,7 @@ public struct Plist {
 
 //MARK:-  RawRepresentable protocol
 /** Convert from and to Cocoa type.
-:discussion: Use to convert from and to Swift and Foundation Plist type (String, NSNumber, NSDate, NSData, NSArray, NSDictionary (Dictionary key must be String)) to a Plist tree. */
+Use to convert from and to Swift and Foundation Plist type (String, NSNumber, NSDate, NSData, NSArray, NSDictionary (Dictionary key must be String)) to a Plist tree. */
 extension Plist : RawRepresentable {
     
     /** Designited Creation Method
@@ -134,7 +134,7 @@ extension Plist : RawRepresentable {
     }
     
     /** Convenience method to unwrap the result of init?(rawValue:)
-    :warning: Method will crash if an error occure */
+    - warning: Method will crash if an error occure */
     public static func newWithRawValue(_ rawValue: Any) -> Plist {
         return Plist(rawValue: rawValue)!
     }
@@ -172,7 +172,7 @@ extension Plist : RawRepresentable {
 //MARK:- Accessing Entity Values
 /** Provide readonly access to **leaf** and **node** value */
 public extension Plist {
-    /** :return: a String if Plist **leaf** is a String, nil otherwise */
+    /** - return: a String if Plist **leaf** is a String, nil otherwise */
     public var string : String? {
         get {
             switch entityType {
@@ -183,7 +183,7 @@ public extension Plist {
             }
         }
     }
-    /** :return: a NSNumber if Plist **leaf** is a number (Bool, Float, Int), nil otherwise */
+    /** - return: a NSNumber if Plist **leaf** is a number (Bool, Float, Int), nil otherwise */
     public var number : NSNumber? {
         get {
             switch entityType {
@@ -196,7 +196,7 @@ public extension Plist {
     }
     //TODO: Add convinience to get Int, Float and Bool
     
-    /** :return: a NSDate if Plist **leaf** is a Date, nil otherwise */
+    /** - return: a NSDate if Plist **leaf** is a Date, nil otherwise */
     public var date : Date? {
         get {
             switch entityType {
@@ -207,7 +207,7 @@ public extension Plist {
             }
         }
     }
-    /** :return: a NSData if Plist **leaf** is a Data, nil otherwise */
+    /** - return: a NSData if Plist **leaf** is a Data, nil otherwise */
     public var data : Data? {
         get {
             switch entityType {
@@ -218,7 +218,7 @@ public extension Plist {
             }
         }
     }
-    /** :return: a [Plist] if Plist **node** is an array, nil otherwise */
+    /** - return: a [Plist] if Plist **node** is an array, nil otherwise */
     public var array : [Plist]? {
         get {
             switch entityType {
@@ -229,7 +229,7 @@ public extension Plist {
             }
         }
     }
-    /** :return: a [String:Plist] if Plist **node** is a Dictionary, nil otherwise */
+    /** - return: a [String:Plist] if Plist **node** is a Dictionary, nil otherwise */
     public var dictionary : [String : Plist]? {
         get {
             switch entityType {
@@ -246,7 +246,7 @@ public extension Plist {
 /** Array subscript to get and set Plist at index */
 public extension Plist {
     /** Array subscript
-    :warning: Numerical subscript on a Plist that is not an array **node** will result in a crash */
+    - warning: Numerical subscript on a Plist that is not an array **node** will result in a crash */
     subscript(index: Int) -> Plist {
         get {
             return self.array![index]
@@ -263,7 +263,7 @@ public extension Plist {
 /** Dictionary sucscript to get and set Plist at key */
 public extension Plist {
     /** Dictionary subscript
-    :warning: String subscript on a Plist that is not a dictionary **node** will result in a crash */
+    - warning: String subscript on a Plist that is not a dictionary **node** will result in a crash */
     subscript(key: String) -> Plist? {
         get {
             return self.dictionary![key]
@@ -281,7 +281,7 @@ public extension Plist {
 extension Plist : Equatable {}
 
 /** Equality is based on the stored value for the Plist element
-:Warning: Float equality remains Float equality
+- warning: Float equality remains Float equality
 */
 public func ==(lhs: Plist, rhs: Plist) -> Bool {
     let tuple = (lhs.entityType, rhs.entityType)
@@ -308,7 +308,7 @@ public func ==(lhs: Plist, rhs: Plist) -> Bool {
 extension Plist: Swift.Sequence {
 
     /** Enable 'for in' support by providing a Generator over SequenceType Plist (Array, and Dictionary)
-    :Note: Calling this method on a non-SequenceType will make 0 iteration in a For in loop */
+    - note: Calling this method on a non-SequenceType will make 0 iteration in a For in loop */
     public func makeIterator() -> AnyIterator<(Swift.String, Plist)> {
         switch entityType {
         case .array(let value):
