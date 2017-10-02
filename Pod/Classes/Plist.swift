@@ -15,12 +15,12 @@ public struct Plist {
     
     fileprivate var entityType : EntityType
     fileprivate enum EntityType {
-        case string(Swift.String)
+        case string(String)
         case number(NSNumber)
-        case date(Foundation.Date)
-        case data(Foundation.Data)
+        case date(Date)
+        case data(Data)
         case array([Plist])
-        case dictionary([Swift.String : Plist])
+        case dictionary([String : Plist])
     }
     
     //MARK:- Entity Creation
@@ -153,20 +153,15 @@ extension Plist : RawRepresentable {
             case .data(let value):
                 return value
             case .array(let value):
-                var output = [AnyObject]()
+                var output = [Any]()
                 for p in value {
-                    if let raw: AnyObject = p.rawValue as? AnyObject {
-                        output.append(raw)
-                    }
+                        output.append(p.rawValue)
                 }
                 return output
             case .dictionary(let value):
-                var output = [String : AnyObject]()
+                var output = [String : Any]()
                 for (key, val) in value {
-                    // FIXME: https://bugs.swift.org/browse/SR-2420 (probably relate to this bug in Xcode 8 beta 6
-                    if let raw: AnyObject = val.rawValue as? AnyObject {
-                        output[key] = raw
-                    }
+                    output[key] = val.rawValue
                 }
                 return output
             }
