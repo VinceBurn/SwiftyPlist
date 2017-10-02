@@ -12,6 +12,35 @@ import PlistParsing
 
 // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/PropertyLists/AboutPropertyLists/AboutPropertyLists.html
 
+protocol FloatingPointEquality {
+    var defaultEpsilon: Self { get }
+    func isEqual(to other: Self, epsilon: Self?) -> Bool
+}
+
+extension FloatingPointEquality where Self == Double {
+    var defaultEpsilon: Double { return 1e-15 }
+}
+
+extension FloatingPointEquality where Self == Float {
+    var defaultEpsilon: Float { return 1e-7 }
+}
+
+extension Double: FloatingPointEquality {
+    func isEqual(to other: Double, epsilon: Double? = nil) -> Bool {
+        let eps = epsilon == nil ? defaultEpsilon : epsilon!
+        return abs(other - self) <= eps
+    }
+}
+
+extension Float: FloatingPointEquality {
+    func isEqual(to other: Float, epsilon: Float? = nil) -> Bool {
+        let eps = epsilon == nil ? defaultEpsilon : epsilon!
+        return abs(other - self) <= eps
+    }
+}
+
+
+
 class Plist_test: XCTestCase {
     
     //MARK:- Convinience Helpers
@@ -49,7 +78,7 @@ class Plist_test: XCTestCase {
     }
     func assert_givenIntInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let sut = creation(1)
-        XCTAssertEqual((sut.number as! Int), 1, "")
+        XCTAssertEqual((sut.number!.intValue), 1, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
@@ -57,8 +86,10 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
     func assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
-        let sut = creation(Float(1.3))
-        XCTAssertEqual((sut.number as! Float), 1.3, "")
+        let inputValue: Float = 1.3
+        let sut = creation(inputValue)
+        XCTAssertTrue(sut.number!.floatValue.isEqual(to: inputValue, epsilon: inputValue.defaultEpsilon))
+        XCTAssertTrue(sut.number!.doubleValue.isEqual(to: Double(1.3), epsilon: Double(inputValue.defaultEpsilon)))
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
@@ -67,7 +98,8 @@ class Plist_test: XCTestCase {
     }
     func assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let sut = creation(Double(1.3))
-        XCTAssertEqual((sut.number as! Float), 1.3, "")
+        XCTAssertEqual((sut.number!.floatValue), 1.3, "")
+        XCTAssertEqual((sut.number!.doubleValue), 1.3, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
@@ -405,7 +437,7 @@ class Plist_test: XCTestCase {
         let num = NSNumber(value: 3)
         let p = Plist.newWithRawValue(num)
         if let sut = p.rawValue as? NSNumber {
-            let i = sut as Int, f = sut as Float, b = sut as Bool
+            let i = sut.intValue, f = sut.floatValue, b = sut.boolValue
             XCTAssertTrue(sut.isEqual(to: num), "")
             XCTAssertEqual(i, 3, "")
             XCTAssertEqual(f, Float(3), "")
@@ -697,7 +729,7 @@ class Plist_test: XCTestCase {
             XCTAssertEqual(plist.string!, ar[counter], "Plist are retreive in the array's order")
             let str = "\(counter)"
             XCTAssertEqual(key, str, "The key is a string representation of the index")
-            gen.next()
+            _ = gen.next()
             counter += 1
         }
         
@@ -716,7 +748,7 @@ class Plist_test: XCTestCase {
             let str = "\(plist.number as! Int)"
             values[key] = (plist.number as! Int)
             XCTAssertEqual(key, str, "")
-            gen.next()
+            _ = gen.next()
         }
         
         XCTAssertEqual(dic, values, "")
