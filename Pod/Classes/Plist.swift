@@ -278,28 +278,28 @@ public extension Plist {
 
 //MARK:- Equatable 
 /** Conformance to the Equatable protocol */
-extension Plist : Equatable {}
-
-/** Equality is based on the stored value for the Plist element
-- warning: Float equality remains Float equality
-*/
-public func ==(lhs: Plist, rhs: Plist) -> Bool {
-    let tuple = (lhs.entityType, rhs.entityType)
-    switch tuple {
-    case let (.string(left), .string(right)):
-        return left == right
-    case let (.number(left), .number(right)):
-        return left.isEqual(to: right)
-    case let (.date(left), .date(right)):
-        return (left == right)
-    case let (.data(left), .data(right)):
-        return (left == right)
-    case let (.array(left), .array(right)):
-        return left == right
-    case let (.dictionary(left), .dictionary(right)):
-        return left == right
-    default:
-        return false
+extension Plist : Equatable {
+    /** Equality is based on the stored value for the Plist element
+     - warning: Float equality remains Float equality
+     */
+    public static func ==(lhs: Plist, rhs: Plist) -> Bool {
+        let tuple = (lhs.entityType, rhs.entityType)
+        switch tuple {
+        case let (.string(left), .string(right)):
+            return left == right
+        case let (.number(left), .number(right)):
+            return left.isEqual(to: right)
+        case let (.date(left), .date(right)):
+            return (left == right)
+        case let (.data(left), .data(right)):
+            return (left == right)
+        case let (.array(left), .array(right)):
+            return left == right
+        case let (.dictionary(left), .dictionary(right)):
+            return left == right
+        default:
+            return false
+        }
     }
 }
 
