@@ -441,7 +441,7 @@ class Plist_test: XCTestCase {
             XCTAssertTrue(sut.isEqual(to: num), "")
             XCTAssertEqual(i, 3, "")
             XCTAssertEqual(f, Float(3), "")
-            XCTAssertEqual(b, Bool(3), "")
+            XCTAssertEqual(b, Bool(truncating: 3), "")
             XCTAssertTrue(b, "")
         } else { XCTFail("") }
     }

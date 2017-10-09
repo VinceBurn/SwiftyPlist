@@ -5,7 +5,10 @@
 
 ### Note
 
-For now this repo is a personal exercise in implementing in a TDD manner a Plist representation inspired by [PropertyList](https://github.com/monyschuk/PropertyList) which is inspired by [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)
+For now this repo is a personal exercise in implementing in a TDD manner a Plist representation inspired by [PropertyList](https://github.com/monyschuk/PropertyList) which is inspired by [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON)  
+
+
+Swift 4.0 introduced the **Codable** protocol, that can be use with JSON, but that can also be used with property list. Moving forward you should look into that option.
 
 ## Usage
 ```Swift
