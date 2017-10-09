@@ -28,24 +28,29 @@ platform :ios do
   end
 
   desc "Validate that all state are OK to build next version"
-  lane :pre_release_validation do
+  lane :pre_release_validation do | options |
     UI.header("Validation")
 
-    UI.verbose("verify git status")
-    target_branch = "master"
-    branch_name = git_branch
-    if branch_name != target_branch
-      UI.user_error!("This lane should be run from the '#{target_branch}' branch, not from '#{branch_name}'")
+    if options[:no_git_check]
+      UI.verbose("Skipping git verification")
+    else
+      UI.verbose("verify git status")
+      target_branch = "master"
+      branch_name = git_branch
+      if branch_name != target_branch
+        UI.user_error!("This lane should be run from the '#{target_branch}' branch, not from '#{branch_name}'")
+      end
+      UI.verbose("git is on branch: #{branch_name}")
+      ensure_git_status_clean
+      UI.verbose("git status is clean")
+      UI.verbose("Sync git with origin")
+      git_pull
+
+      UI.verbose("Get current tags from origin")
+      sh('git tag -l | xargs git tag -d')
+      sh('git fetch --tags')
+      UI.verbose("git is in sync with origin")
     end
-    UI.verbose("git is on branch: #{branch_name}")
-    ensure_git_status_clean
-    UI.verbose("git status is clean")
-    UI.verbose("Sync git with origin")
-    git_pull
-    UI.verbose("Get current tags from origin")
-    sh('git tag -l | xargs git tag -d')
-    sh('git fetch --tags')
-    UI.verbose("git is in sync with origin")
 
     UI.verbose("setup Xcode version: #{xcode_version}")
     xcversion(version: xcode_version)
