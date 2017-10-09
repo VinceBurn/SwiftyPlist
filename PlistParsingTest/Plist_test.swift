@@ -12,10 +12,39 @@ import PlistParsing
 
 // https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/PropertyLists/AboutPropertyLists/AboutPropertyLists.html
 
+protocol FloatingPointEquality {
+    var defaultEpsilon: Self { get }
+    func isEqual(to other: Self, epsilon: Self?) -> Bool
+}
+
+extension FloatingPointEquality where Self == Double {
+    var defaultEpsilon: Double { return 1e-15 }
+}
+
+extension FloatingPointEquality where Self == Float {
+    var defaultEpsilon: Float { return 1e-7 }
+}
+
+extension Double: FloatingPointEquality {
+    func isEqual(to other: Double, epsilon: Double? = nil) -> Bool {
+        let eps = epsilon == nil ? defaultEpsilon : epsilon!
+        return abs(other - self) <= eps
+    }
+}
+
+extension Float: FloatingPointEquality {
+    func isEqual(to other: Float, epsilon: Float? = nil) -> Bool {
+        let eps = epsilon == nil ? defaultEpsilon : epsilon!
+        return abs(other - self) <= eps
+    }
+}
+
+
+
 class Plist_test: XCTestCase {
     
     //MARK:- Convinience Helpers
-    func plistArrayFromStrings(strings: [String]) -> Plist {
+    func plistArrayFromStrings(_ strings: [String]) -> Plist {
         var ar : [Plist] = []
         for s in strings {
             let p = Plist(plistObject: s)
@@ -26,7 +55,7 @@ class Plist_test: XCTestCase {
         return p
     }
     
-    func plistDicFromKeysValues(keysValues: [(String, String)]) -> Plist {
+    func plistDicFromKeysValues(_ keysValues: [(String, String)]) -> Plist {
         var dic : [String : Plist] = [:]
         for (k, v) in keysValues {
             let p = Plist(plistObject: v)
@@ -38,7 +67,7 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- Entity Creation Asserts
-    func assert_givenStringInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
+    func assert_givenStringInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let sut = creation("hello")
         XCTAssertEqual(sut.string!, "hello", "string is the provieded one")
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
@@ -47,34 +76,37 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenIntInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
+    func assert_givenIntInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let sut = creation(1)
-        XCTAssertEqual((sut.number as! Int), 1, "")
+        XCTAssertEqual((sut.number!.intValue), 1, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
-        let sut = creation(Float(1.3))
-        XCTAssertEqual((sut.number as! Float), 1.3, "")
+    func assert_givenFloatInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
+        let inputValue: Float = 1.3
+        let sut = creation(inputValue)
+        XCTAssertTrue(sut.number!.floatValue.isEqual(to: inputValue, epsilon: inputValue.defaultEpsilon))
+        XCTAssertTrue(sut.number!.doubleValue.isEqual(to: Double(1.3), epsilon: Double(inputValue.defaultEpsilon)))
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
+    func assert_givenDoubleInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let sut = creation(Double(1.3))
-        XCTAssertEqual((sut.number as! Float), 1.3, "")
+        XCTAssertEqual((sut.number!.floatValue), 1.3, "")
+        XCTAssertEqual((sut.number!.doubleValue), 1.3, "")
         XCTAssertTrue(sut.string == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.date == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.data == nil, "Only the provied input is given back")
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
+    func assert_givenBoolInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let sut = creation(true)
         XCTAssertEqual((sut.number as! Bool), true, "")
         XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
@@ -83,11 +115,11 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenDateInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
-        let date = NSDate()
+    func assert_givenDateInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
+        let date = Date()
         let sut = creation(date)
         if let result = sut.date {
-            XCTAssertTrue(date.isEqualToDate(result), "")
+            XCTAssertTrue(date == result as Date, "")
         } else { XCTFail("Date is not nil") }
         XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
@@ -95,11 +127,11 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenDataInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
-        let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
+    func assert_givenDataInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
+        let data = "allo".data(using: String.Encoding.utf8)!
         let sut = creation(data)
         if let result = sut.data {
-            XCTAssertTrue(data.isEqualToData(result), "")
+            XCTAssertTrue(data == result as Data, "")
         } else { XCTFail("Data is not nil") }
         XCTAssertTrue(sut.string == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.number == nil, "Only the provied input is given back")
@@ -107,44 +139,44 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(sut.array == nil, "Only the provided input is given back")
         XCTAssertTrue(sut.dictionary == nil, "Only the provided input is given back")
     }
-    func assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
+    func assert_givenEmptyNotCastedArrayInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let sut = creation([])
         if let result = sut.array {
             XCTAssertEqual(result.count, 0, "")
         } else { XCTFail("") }
     }
-    func assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(creation: (Any) -> Plist) {
-        let ar = ["bob", 1, true]
+    func assert_givenNotCastedArrayInput_whenCreation_thenCanGetTheValuesBack(_ creation: (Any) -> Plist) {
+        let ar = ["bob", 1, true] as [Any]
         let sut = creation(ar)
-        if let result = sut.array, p0 = result[0].string, p1 = result[1].number as? Int, p2 = result[2].number as? Bool {
+        if let result = sut.array, let p0 = result[0].string, let p1 = result[1].number as? Int, let p2 = result[2].number as? Bool {
             XCTAssertEqual(result.count, 3, "")
             XCTAssertEqual(p0, "bob", "")
             XCTAssertEqual(p1, 1, "")
             XCTAssertEqual(p2, true, "")
         } else { XCTFail("") }
     }
-    func assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
+    func assert_givenEmptyNSDictionaryInput_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let dic = NSDictionary()
         let sut = creation(dic)
         if let result = sut.dictionary {
             XCTAssertEqual(result.count, 0, "")
         } else { XCTFail("") }
     }
-    func assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(creation: (Any) -> Plist) {
-        let date = NSDate()
-        let dic : [ String : AnyObject ] = [ "str" : "p", "int" : 1, "date" : date  ]
+    func assert_givenNSDictionaryInput_whenCreation_thenCeanGetTheValueBack(_ creation: (Any) -> Plist) {
+        let date = Date()
+        let dic : [ String : AnyObject ] = [ "str" : "p" as AnyObject, "int" : 1 as AnyObject, "date" : date as AnyObject  ]
         let sut = creation(dic)
-        if let r = sut.dictionary, ps = r["str"]?.string, pi = r["int"]?.number as? Int, pd = r["date"]?.date {
+        if let r = sut.dictionary, let ps = r["str"]?.string, let pi = r["int"]?.number as? Int, let pd = r["date"]?.date {
             XCTAssertEqual(r.count, 3, "")
             XCTAssertEqual(ps, "p", "")
             XCTAssertEqual(pi, 1, "")
-            XCTAssertTrue(pd.isEqualToDate(date), "")
+            XCTAssertTrue(pd as Date == date, "")
         } else { XCTFail("") }
     }
-    func assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(creation: (Any) -> Plist) {
+    func assert_givenDictionaryStringInt_whenCreation_thenCanGetTheValueBack(_ creation: (Any) -> Plist) {
         let inputDic = [ "val0" : 0, "val1" : 1]
         let sut = creation(inputDic)
-        if let dic = sut.dictionary, num0 = dic["val0"]?.number as? Int, num1 = dic["val1"]?.number as? Int {
+        if let dic = sut.dictionary, let num0 = dic["val0"]?.number as? Int, let num1 = dic["val1"]?.number as? Int {
             XCTAssertEqual(dic.count, 2, "")
             XCTAssertEqual(num0, 0, "")
             XCTAssertEqual(num1, 1, "")
@@ -152,7 +184,7 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- Entity Creation & Accessing Values
-    func creation(any: Any) -> Plist {
+    func creation(_ any: Any) -> Plist {
         return Plist(plistObject: any)
     }
     
@@ -228,7 +260,7 @@ class Plist_test: XCTestCase {
     
     func test_givenArrayOfArrayInput_whenCreation_thenCanGetTheValuesBack() {
         let sut = Plist(plistObject: [plistArrayFromStrings(["p0", "p1"])])
-        if let rAr = sut.array, let resultAr = rAr[0].array where resultAr.count == 2  {
+        if let rAr = sut.array, let resultAr = rAr[0].array , resultAr.count == 2  {
             for i in 0 ..< resultAr.count {
                 let s = resultAr[i]
                 if let str = s.string {
@@ -259,10 +291,10 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- RawRepresentable [init]
-    func rawCreation(any: Any) -> Plist {
+    func rawCreation(_ any: Any) -> Plist {
         return Plist(rawValue: any)!
     }
-    func newRawCreation(any: Any) -> Plist {
+    func newRawCreation(_ any: Any) -> Plist {
         return Plist.newWithRawValue(any)
     }
     
@@ -328,7 +360,7 @@ class Plist_test: XCTestCase {
     
     //MARK: Failed [init]
     func nonPropertyListItems() -> NSArray {
-        return [ NSDateComponents(), NSNull(), NSScanner() ]
+        return [ DateComponents(), NSNull(), Scanner() ]
     }
     
     func test_givenNonPropertyListIten_whenRawCreation_thenNil() {
@@ -350,7 +382,7 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenArrayOfArrayOfNonPropertyList_whenRawCreation_thenNil() {
-        let rootAr = [ 1, 2.3, nonPropertyListItems(), "String"]
+        let rootAr = [ 1, 2.3, nonPropertyListItems(), "String"] as [Any]
         let sut = Plist(rawValue: rootAr)
         XCTAssertTrue(sut == nil)
     }
@@ -362,27 +394,27 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenDictionaryOfNonPropertyListItem_whenRawCreation_thenNil() {
-        let dic = [ "key0" : NSDateComponents(), "null" : NSNull(), "scan" : NSScanner()]
+        let dic = [ "key0" : DateComponents(), "null" : NSNull(), "scan" : Scanner()] as [String : Any]
         let sut = Plist(rawValue: dic)
         XCTAssertTrue(sut == nil, "")
     }
     
     func test_givenDictionaryWithNonStringKey_whenRawCreation_thenNil() {
-        let dic = [ "valid" : "bonjour", 1 : "not valid key for this value" ]
+        let dic = [ "valid" : "bonjour", 1 : "not valid key for this value" ] as [AnyHashable : String]
         let sut = Plist(rawValue: dic)
         XCTAssertTrue(sut == nil, "")
     }
     
     func test_givenDictionaryOfDicOfNonPropertyList_whenRawCreation_thenNil() {
-        let innerDic = [ "key0" : NSDateComponents(), "null" : NSNull(), "scan" : NSScanner()]
-        let dic = [ "key" : 1, "not plist complient dic" : innerDic, "k" : "v" ]
+        let innerDic = [ "key0" : DateComponents(), "null" : NSNull(), "scan" : Scanner()] as [String : Any]
+        let dic = [ "key" : 1, "not plist complient dic" : innerDic, "k" : "v" ] as [String : Any]
         let sut = Plist(rawValue: dic)
         XCTAssertTrue(sut == nil, "")
     }
     
     func test_givenDicOfDicWithNonStringKey_whenRawCreation_thenNil() {
-        let innerDic = [ "good" : "ok", 1 : "NOT Good", "ok" : "ok"]
-        let dic = [ "good" : "ok", "innerDic" : innerDic]
+        let innerDic = [ "good" : "ok", 1 : "NOT Good", "ok" : "ok"] as [AnyHashable : String]
+        let dic = [ "good" : "ok", "innerDic" : innerDic] as [String : Any]
         let sut = Plist(rawValue: dic)
         XCTAssertTrue(sut == nil, "")
     }
@@ -402,11 +434,11 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenNumberPlist_whenRawValue_thenNumber() {
-        let num = NSNumber(integer: 3)
+        let num = NSNumber(value: 3)
         let p = Plist.newWithRawValue(num)
         if let sut = p.rawValue as? NSNumber {
-            let i = sut as Int, f = sut as Float, b = sut as Bool
-            XCTAssertTrue(sut.isEqualToNumber(num), "")
+            let i = sut.intValue, f = sut.floatValue, b = sut.boolValue
+            XCTAssertTrue(sut.isEqual(to: num), "")
             XCTAssertEqual(i, 3, "")
             XCTAssertEqual(f, Float(3), "")
             XCTAssertEqual(b, Bool(3), "")
@@ -415,18 +447,18 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenDatePlist_whenRawValue_thenDate() {
-        let date = NSDate()
+        let date = Date()
         let p = Plist.newWithRawValue(date)
-        if let sut = p.rawValue as? NSDate {
-            XCTAssertTrue(sut.isEqualToDate(date), "")
+        if let sut = p.rawValue as? Date {
+            XCTAssertTrue(sut == date, "")
         } else { XCTFail("") }
     }
     
     func test_givenDataPlist_whenRawValue_thenData() {
-        let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let data = "allo".data(using: String.Encoding.utf8)!
         let p = Plist.newWithRawValue(data)
-        if let sut = p.rawValue as? NSData {
-            XCTAssertTrue(sut.isEqualToData(data), "")
+        if let sut = p.rawValue as? Data {
+            XCTAssertTrue(sut == data, "")
         } else { XCTFail("") }
     }
     
@@ -438,13 +470,13 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenFilledArrayPlist_whenRawValue_thenNSArray() {
-        let date = NSDate()
-        let ar = ["str", 1, date]
+        let date = Date()
+        let ar = ["str", 1, date] as [Any]
         let p = Plist.newWithRawValue(ar)
-        if let sut = p.rawValue as? NSArray, str = sut[0] as? String, i = sut[1] as? Int, d = sut[2] as? NSDate {
+        if let sut = p.rawValue as? NSArray, let str = sut[0] as? String, let i = sut[1] as? Int, let d = sut[2] as? Date {
             XCTAssertEqual(str, "str", "")
             XCTAssertEqual(i, 1, "")
-            XCTAssertTrue(d.isEqualToDate(date), "")
+            XCTAssertTrue(d == date, "")
         } else { XCTFail("") }
     }
     
@@ -456,12 +488,12 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenFilledDicPlist_whenRawValue_thenNSDictionary() {
-        let date = NSDate()
+        let date = Date()
         let ar = ["in ar"];
         let dic = [ "date" : date, "int" : 1, "ar" : ar, "str" : "allo!"] as NSDictionary
         let p = Plist.newWithRawValue(dic)
-        if let sut = p.rawValue as? NSDictionary, d = sut["date"] as? NSDate, a = sut["ar"] as? NSArray {
-            XCTAssertTrue(d.isEqualToDate(date), "")
+        if let sut = p.rawValue as? NSDictionary, let d = sut["date"] as? Date, let a = sut["ar"] as? NSArray {
+            XCTAssertTrue(d == date, "")
             XCTAssertEqual(a.count, 1, "")
             XCTAssertEqual(sut.count, 4, "")
         } else { XCTFail("") }
@@ -505,7 +537,7 @@ class Plist_test: XCTestCase {
         var sut = plistDicFromKeysValues([])
         let p = Plist(plistObject: "new")
         sut["k"] = p
-        if let pStr = sut.dictionary!["k"], result = pStr.string {
+        if let pStr = sut.dictionary!["k"], let result = pStr.string {
             XCTAssertEqual(result, "new", "")
         } else { XCTFail("") }
     }
@@ -513,7 +545,7 @@ class Plist_test: XCTestCase {
     func test_givenDictionaryPlist_whenWriteSubscriptKeyInDic_thenOverrideExistingKey() {
         var sut = plistDicFromKeysValues([("key", "p")])
         sut["key"] =  Plist(plistObject: "NEW")
-        if let pStr = sut.dictionary!["key"], result = pStr.string {
+        if let pStr = sut.dictionary!["key"], let result = pStr.string {
             XCTAssertEqual(result, "NEW", "")
         } else { XCTFail("") }
     }
@@ -536,13 +568,13 @@ class Plist_test: XCTestCase {
     }
     
     //MARK:- Equatable
-    func assert_equalityFalseWithRawValues(left left: Any, right: Any, message: String) {
+    func assert_equalityFalseWithRawValues(left: Any, right: Any, message: String) {
         let lp = Plist.newWithRawValue(left)
         let rp = Plist.newWithRawValue(right)
         XCTAssertNotEqual(lp, rp, message)
     }
     
-    func assert_eqaulityTrueRawValue(left left: Any, right: Any, message: String) {
+    func assert_eqaulityTrueRawValue(left: Any, right: Any, message: String) {
         let lp = Plist.newWithRawValue(left)
         let rp = Plist.newWithRawValue(right)
         
@@ -588,21 +620,21 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenSameDateValue_whenEqual_thenTrue() {
-        assert_eqaulityTrueRawValue(left: NSDate(timeIntervalSince1970: 3), right: NSDate(timeIntervalSince1970: 3), message: "date and date")
+        assert_eqaulityTrueRawValue(left: Date(timeIntervalSince1970: 3), right: Date(timeIntervalSince1970: 3), message: "date and date")
     }
     
     func test_giventDifferentDate_whenEqual_thenFalse() {
-        assert_equalityFalseWithRawValues(left: NSDate(timeIntervalSince1970: 3), right: NSDate(timeIntervalSince1970: 4), message: "Date and Date")
+        assert_equalityFalseWithRawValues(left: Date(timeIntervalSince1970: 3), right: Date(timeIntervalSince1970: 4), message: "Date and Date")
     }
     
     func test_givenSameDataValue_whenEqual_thenTrue() {
-        let data = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
+        let data = "allo".data(using: String.Encoding.utf8)!
         assert_eqaulityTrueRawValue(left: data, right: data, message: "data and data")
     }
     
     func test_givenDifferentDataValue_whenEqual_thenFalse() {
-        let left = "allo".dataUsingEncoding(NSUTF8StringEncoding)!
-        let right = "alloa".dataUsingEncoding(NSUTF8StringEncoding)!
+        let left = "allo".data(using: String.Encoding.utf8)!
+        let right = "alloa".data(using: String.Encoding.utf8)!
         assert_equalityFalseWithRawValues(left: left, right: right, message: "data and data")
     }
     
@@ -622,21 +654,21 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenSameDeepDictionary_whenEqual_thenTrue() {
-        let date = NSDate()
+        let date = Date()
         assert_eqaulityTrueRawValue(left: [ "0" : 0, "1" : "bob", "date" : date], right: [ "0" : 0, "1" : "bob", "date" : date], message: "")
         // ADD MORE TEST
     }
     
     func test_givenDifferentDeepDictionary_whenEqyal_thenFalse() {
-        let date = NSDate()
+        let date = Date()
         assert_equalityFalseWithRawValues(left: [ "0" : 0, "1" : "bob", "date" : date], right: [ "0" : 0, "1" : "bob!", "date" : date], message: "")
         //  ADD MORE TEST
     }
     
     //MARK:- For in support [SequenceType]
     //MARK: No Iteration
-    func assert_givenPlist_whenGenerate_thenNoIteration(p: Plist, message: String) {
-        let gen = p.generate()
+    func assert_givenPlist_whenGenerate_thenNoIteration(_ p: Plist, message: String) {
+        let gen = p.makeIterator()
         var counter = 0
         for _ in p {
             counter += 1
@@ -645,12 +677,12 @@ class Plist_test: XCTestCase {
         XCTAssertTrue(gen.next() == nil, message)
     }
     
-    func assert_givenNonSequencePlist_whenGenerate_thenNoIteration(p: Plist) {
+    func assert_givenNonSequencePlist_whenGenerate_thenNoIteration(_ p: Plist) {
         let message = "\(p.rawValue) is not a SequenceType to iterate over"
         assert_givenPlist_whenGenerate_thenNoIteration(p, message: message)
     }
     
-    func assert_givenEmptySequencePlist_whenGenerate_thenNoIteration(p: Plist) {
+    func assert_givenEmptySequencePlist_whenGenerate_thenNoIteration(_ p: Plist) {
         let message = "\(p.rawValue) : empty collection won't have iteration"
         assert_givenPlist_whenGenerate_thenNoIteration(p, message: message)
     }
@@ -660,11 +692,11 @@ class Plist_test: XCTestCase {
     }
     
     func test_givenDatePlist_whenGenerate_thenNoIteration() {
-        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(NSDate()))
+        assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(Date()))
     }
     
     func test_givenDataPlist_whenGenerate_thenNoIteration() {
-        let data = "a".dataUsingEncoding(NSUTF8StringEncoding)!
+        let data = "a".data(using: String.Encoding.utf8)!
         assert_givenNonSequencePlist_whenGenerate_thenNoIteration(Plist.newWithRawValue(data))
     }
     
@@ -691,13 +723,13 @@ class Plist_test: XCTestCase {
         let ar = [ "0", "1", "2"]
         let p = Plist.newWithRawValue(ar)
         
-        let gen = p.generate()
+        let gen = p.makeIterator()
         var counter = 0
         for (key, plist) in p {
             XCTAssertEqual(plist.string!, ar[counter], "Plist are retreive in the array's order")
             let str = "\(counter)"
             XCTAssertEqual(key, str, "The key is a string representation of the index")
-            gen.next()
+            _ = gen.next()
             counter += 1
         }
         
@@ -710,13 +742,13 @@ class Plist_test: XCTestCase {
         let dic = ["1" : 1, "3" : 3]
         let p = Plist.newWithRawValue(dic)
         
-        let gen = p.generate()
+        let gen = p.makeIterator()
         var values = [String : Int]()
         for (key, plist) in p {
             let str = "\(plist.number as! Int)"
             values[key] = (plist.number as! Int)
             XCTAssertEqual(key, str, "")
-            gen.next()
+            _ = gen.next()
         }
         
         XCTAssertEqual(dic, values, "")
