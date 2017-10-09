@@ -1,0 +1,108 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+# update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.59.0"
+
+default_platform :ios
+xcode_version = "8.3.3"
+
+platform :ios do
+  before_all do
+    # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
+  end
+
+  desc "Deploy a new version to CocoaPods"
+  lane :release do
+    pre_release_validation
+    make_version
+  end
+
+  desc "Validate that all state are OK to build next version"
+  lane :pre_release_validation do
+    UI.header("Validation")
+
+    UI.verbose("verify git status")
+    target_branch = "master"
+    branch_name = git_branch
+    if branch_name != target_branch
+      UI.user_error!("This lane should be run from the '#{target_branch}' branch, not from '#{branch_name}'")
+    end
+    UI.verbose("git is on branch: #{branch_name}")
+    ensure_git_status_clean
+    UI.verbose("git status is clean")
+    UI.verbose("Sync git with origin")
+    git_pull
+    UI.verbose("Get current tags from origin")
+    sh('git tag -l | xargs git tag -d')
+    sh('git fetch --tags')
+    UI.verbose("git is in sync with origin")
+
+    UI.verbose("setup Xcode version: #{xcode_version}")
+    xcversion(version: xcode_version)
+    ensure_xcode_version(version: xcode_version)
+
+    UI.verbose("Avoid version duplication")
+    UI.verbose("Check if really a new version")
+    version = version_get_podspec
+    if git_tag_exists(tag: version)
+      UI.user_error!("Version Tag already exists: Bump the version in the podspec")
+    end
+
+    UI.verbose("Unit Test")
+    scan
+
+    UI.verbose("podspec validation")
+    pod_lib_lint(verbose: false)
+
+    UI.message("Validation: Done")
+  end
+
+  private_lane :make_version do
+    UI.header("Making version")
+
+    UI.verbose("Add git tag: Pod version")
+    version = version_get_podspec
+    add_git_tag(tag: version, message: "new Pod version")
+    push_to_git_remote(tags: true)
+
+    UI.verbose("Push to Pod Spec Repo")
+    pod_push(verbose: true)
+
+    UI.success("Version: #{version}, is deployed to Cocoapods")
+    notification(message: "SwiftyPlist version #{version} deployed to Cocoapods")
+  end
+
+  # You can define as many lanes as you want
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+
+    # slack(
+    #   message: "Successfully deployed new App Update."
+    # )
+  end
+
+  error do |lane, exception|
+    # slack(
+    #   message: exception.message,
+    #   success: false
+    # )
+  end
+end
+
+
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+
+# fastlane reports which actions are used. No personal data is recorded.
+# Learn more at https://github.com/fastlane/fastlane#metrics
