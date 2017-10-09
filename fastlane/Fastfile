@@ -14,7 +14,7 @@
 fastlane_version "2.59.0"
 
 default_platform :ios
-xcode_version = "8.3.3"
+xcode_version = "9.0"
 
 platform :ios do
   before_all do
